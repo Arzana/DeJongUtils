@@ -1,6 +1,7 @@
 ﻿namespace Mentula.Utilities.Logging
 {
     using System;
+    using static NativeMethods;
 
     /// <summary>
     /// Defines a handler that displays logged messages to the console.
@@ -70,6 +71,23 @@
             }
 
             Console.ForegroundColor = oldColor;
+        }
+
+        private static bool OnConsoleExit(CtrlType sig)
+        {
+            Log.WaitTillStop();
+
+            switch (sig)
+            {
+                case CtrlType.CTRL_C_EVENT:
+                case CtrlType.CTRL_CLOSE_EVENT:
+                    return true;
+                case CtrlType.CTRL_BREAK_EVENT:
+                case CtrlType.CTRL_LOGOFF_EVENT:
+                case CtrlType.CTRL_SHUTDOWN_EVENT:
+                default:
+                    return false;
+            }
         }
     }
 }

@@ -41,6 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\ArrayEnumerable.cs" />
+    <Compile Include="Collections\ArrayEnumerator.cs" />
+    <Compile Include="Collections\Linq_Numeric.cs" />
+    <Compile Include="Collections\Linq_Private.cs" />
+    <Compile Include="Collections\Linq_Public.cs" />
+    <Compile Include="Collections\Linq_String.cs" />
+    <Compile Include="Core\LoggedException.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\LogOutputType.cs" />
     <Compile Include="Logging\Log_dispose.cs" />
@@ -51,6 +58,7 @@
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Threading.cs.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -15,8 +15,6 @@
         static Log()
         {
             obj = new EnsureDisposeObj();
-            handler += new NativeMethods.ConsoleExitHandler(OnConsoleExit);
-            NativeMethods.SetConsoleCtrlHandler(OnConsoleExit, true);
 
             preBuffer = new List<LogMessage>();
             msgbuffer = new Queue<LogMessage>();

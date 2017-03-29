@@ -1,5 +1,7 @@
 ﻿namespace Mentula.Utilities
 {
+    using Logging;
+    using System;
     using System.Runtime.InteropServices;
 
 #if !DEBUG
@@ -18,7 +20,19 @@
             CTRL_SHUTDOWN_EVENT = 6
         }
 
+        internal static void AddConsoleHandle(ConsoleExitHandler handler)
+        {
+            if (SetConsoleCtrlHandler(handler, true))
+            {
+                Log.Info(nameof(Console), $"Added {handler?.Method.Name} to the console handlers");
+            }
+            else Log.Error(nameof(Console), $"Could not add handler errorcode: {GetLastError()}");
+        }
+
         [DllImport("Kernel32.dll")]
-        internal static extern bool SetConsoleCtrlHandler(ConsoleExitHandler handler, bool add);
+        private static extern bool SetConsoleCtrlHandler(ConsoleExitHandler handler, bool add);
+
+        [DllImport("Kernell32.dll")]
+        private static extern int GetLastError();
     }
 }
