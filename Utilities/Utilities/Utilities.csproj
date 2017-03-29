@@ -48,6 +48,7 @@
     <Compile Include="Collections\Linq_Public.cs" />
     <Compile Include="Collections\Linq_String.cs" />
     <Compile Include="Core\LoggedException.cs" />
+    <Compile Include="Core\ExtraMath.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\LogOutputType.cs" />
     <Compile Include="Logging\Log_dispose.cs" />

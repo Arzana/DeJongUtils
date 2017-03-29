@@ -4,14 +4,36 @@ using System.Runtime.Serialization;
 
 namespace Mentula.Utilities.Core
 {
+    /// <summary>
+    /// Represents errors that are logged to the <see cref="Log"/>.
+    /// </summary>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     [Serializable]
     public class LoggedException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoggedException"/> class.
+        /// </summary>
         public LoggedException() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoggedException"/> class with a specified message.
+        /// </summary>
+        /// <param name="message"> The specific message. </param>
         public LoggedException(string message) : base(message) { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoggedException"/> class with a specfied message and an inner exception.
+        /// </summary>
+        /// <param name="message"> The specific message. </param>
+        /// <param name="inner"> The exception that caused this exception. </param>
         public LoggedException(string message, Exception inner) : base(message, inner) { }
         protected LoggedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+        /// <summary>
+        /// Throws and logges a <see cref="LoggedException"/>.
+        /// </summary>
+        /// <param name="tag"> The object that caused the exception. </param>
         public static void Raise(string tag)
         {
             LoggedException e = new LoggedException();
@@ -19,6 +41,11 @@ namespace Mentula.Utilities.Core
             throw e;
         }
 
+        /// <summary>
+        /// Throws and logges a <see cref="LoggedException"/> with a specified message.
+        /// </summary>
+        /// <param name="tag"> The object that caused the exception. </param>
+        /// <param name="message"> The specified message. </param>
         public static void Raise(string tag, string message)
         {
             LoggedException e = new LoggedException(message);
@@ -26,6 +53,12 @@ namespace Mentula.Utilities.Core
             throw e;
         }
 
+        /// <summary>
+        /// Throws and logges a <see cref="LoggedException"/> with a specified message and an inner exception.
+        /// </summary>
+        /// <param name="tag"> The object that caused the exception. </param>
+        /// <param name="message"> The specified message. </param>
+        /// <param name="inner"> The exception that caused the exception. </param>
         public static void Raise(string tag, string message, Exception inner)
         {
             LoggedException e = new LoggedException(message, inner);
