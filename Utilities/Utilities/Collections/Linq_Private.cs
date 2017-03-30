@@ -1,5 +1,4 @@
 ﻿using Mentula.Utilities.Core;
-using Mentula.Utilities.Logging;
 using System;
 
 namespace Mentula.Utilities.Collections

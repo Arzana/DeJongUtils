@@ -1,4 +1,4 @@
-﻿using Mentula.Utilities.Logging;
+﻿using Mentula.Utilities.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,12 +53,7 @@ namespace Mentula.Utilities.Collections
 
         private void CheckDisposed()
         {
-            if (Disposed)
-            {
-                ObjectDisposedException e = new ObjectDisposedException("ArrayEnumerator");
-                Log.Fatal(nameof(ArrayEnumerator), e);
-                throw e;
-            }
+            LoggedException.RaiseIf(Disposed, nameof(ArrayEnumerator), "Cannot excecute method!", new ObjectDisposedException("ArrayEnumerator"));
         }
     }
 

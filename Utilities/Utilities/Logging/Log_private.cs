@@ -1,7 +1,9 @@
 ﻿namespace Mentula.Utilities.Logging
 {
+    using Collections;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Threading;
 
     public static partial class Log
@@ -10,6 +12,8 @@
         private static List<LogMessage> preBuffer;
         private static Queue<LogMessage> msgbuffer;
 
+        private static LogTraceListener listener;
+
         static Log()
         {
             obj = new EnsureDisposeObj();
@@ -17,8 +21,17 @@
             preBuffer = new List<LogMessage>();
             msgbuffer = new Queue<LogMessage>();
 
+            AddDebug();
+
             logThread = new StopAbleThread(null, null, PipeTick);
             logThread.Start();
+        }
+
+        [Conditional("DEBUG")]
+        private static void AddDebug()
+        {
+            System.Diagnostics.Debug.Listeners.Add(listener = new LogTraceListener());
+            EventLog.GetEventLogs().First((l) => l.Log == "Application").EntryWritten += LogEvent;
         }
 
         private static void Message(LogMessageType type, string tag, string message)
@@ -56,6 +69,11 @@
 
             preBuffer.Remove(result);
             return result;
+        }
+
+        private static void LogEvent(object sender, EntryWrittenEventArgs e)
+        {
+            Verbose(e.Entry.Source, e.Entry.Message);
         }
 
         private static void LogException(string tag, int pId, int tId, Exception e)

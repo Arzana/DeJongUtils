@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mentula.Utilities.Core;
+using System;
 
 namespace Mentula.Utilities.Collections
 {
@@ -79,7 +80,11 @@ namespace Mentula.Utilities.Collections
         public static char First(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
-            return FirstInternal(source, selector, () => { throw new InvalidOperationException("No match found!"); });
+            return FirstInternal(source, selector, () => 
+            {
+                RaiseLinqEsception(nameof(First), new InvalidOperationException("No match found!"));
+                return '\0';
+            });
         }
 
         public static char FirstOrDefault(this string source)
@@ -121,7 +126,11 @@ namespace Mentula.Utilities.Collections
         public static char Last(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
-            return LastInternal(source, selector, () => { throw new InvalidOperationException("No match found!"); });
+            return LastInternal(source, selector, () =>
+            {
+                RaiseLinqEsception(nameof(First), new InvalidOperationException("No match found!"));
+                return '\0';
+            });
         }
 
         public static char LastOrDefault(this string source)

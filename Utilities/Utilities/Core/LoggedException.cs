@@ -66,16 +66,34 @@ namespace Mentula.Utilities.Core
             throw e;
         }
 
+        /// <summary>
+        /// Throws and logges a <see cref="LoggedException"/> if the condition is <see langword="true"/>.
+        /// </summary>
+        /// <param name="condition"> The condition to check. </param>
+        /// <param name="tag"> The object that caused the exception. </param>
         public static void RaiseIf(bool condition, string tag)
         {
             if (condition) Raise(tag);
         }
 
+        /// <summary>
+        /// Throws and logges a <see cref="LoggedException"/> with a specified message if the condition is <see langword="true"/>s.
+        /// </summary>
+        /// <param name="condition"> The condition to check. </param>
+        /// <param name="tag"> The object that caused the exception. </param>
+        /// <param name="message"> The specified message. </param>
         public static void RaiseIf(bool condition, string tag, string message)
         {
             if (condition) Raise(tag, message);
         }
 
+        /// <summary>
+        /// Throws and logges a <see cref="LoggedException"/> with a specified message and an inner exception if the condition is <see langword="true"/>s.
+        /// </summary>
+        /// <param name="condition"> The condition to check. </param>
+        /// <param name="tag"> The object that caused the exception. </param>
+        /// <param name="message"> The specified message. </param>
+        /// <param name="inner"> The exception that caused the exception. </param>
         public static void RaiseIf(bool condition, string tag, string message, Exception inner)
         {
             if (condition) Raise(tag, message, inner);

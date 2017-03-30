@@ -38,6 +38,9 @@
         /// </summary>
         public static ConsoleColor FatalColor { get; set; } = ConsoleColor.DarkRed;
 
+        /// <summary>
+        /// Gets or sets whether the <see cref="ConsoleLogger"/> should automaticly update itself.
+        /// </summary>
         public bool AutoUpdate
         {
             get { return autoUpd; }
@@ -61,7 +64,8 @@
 
         private LogOutputType type;
         private StopAbleThread updThread;
-        private bool cHndlSet, autoUpd;
+        private ConsoleExitHandler hndlr;
+        private bool autoUpd;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ConsoleLogger"/> class with a specified output type.
@@ -70,17 +74,15 @@
         public ConsoleLogger(LogOutputType type = LogOutputType.ThreadTime)
         {
             this.type = type;
-            if (!cHndlSet)
+            if (hndlr == null)
             {
-                AddConsoleHandle(OnConsoleExit);
-                cHndlSet = true;
+                AddConsoleHandle(hndlr += OnConsoleExit);
             }
         }
 
         ~ConsoleLogger()
         {
-            RemoveConsoleHandle(OnConsoleExit);
-            cHndlSet = false;
+            RemoveConsoleHandle(hndlr -= OnConsoleExit);
         }
 
         /// <summary>
