@@ -36,7 +36,7 @@
         /// <summary>
         /// The color used for logging fatal messages; default value=DarkRed
         /// </summary>
-        public static ConsoleColor FatalColor { get; set; } = ConsoleColor.DarkRed;
+        public static ConsoleColor FatalColor { get; set; } = ConsoleColor.Red;
 
         /// <summary>
         /// Gets or sets whether the <see cref="ConsoleLogger"/> should automaticly update itself.
@@ -50,7 +50,7 @@
 
                 if (value)
                 {
-                    updThread = new StopAbleThread(null, null, Update);
+                    updThread = new StopableThread(null, null, Update);
                     updThread.Start();
                 }
                 else
@@ -63,7 +63,7 @@
         }
 
         private LogOutputType type;
-        private StopAbleThread updThread;
+        private StopableThread updThread;
         private ConsoleExitHandler hndlr;
         private bool autoUpd;
 
@@ -71,12 +71,17 @@
         /// Creates a new instance of the <see cref="ConsoleLogger"/> class with a specified output type.
         /// </summary>
         /// <param name="type"> The output type of the logger. </param>
-        public ConsoleLogger(LogOutputType type = LogOutputType.ThreadTime)
+        public ConsoleLogger(LogOutputType type = LogOutputType.ThreadTime, bool suppressConsoleResize = false)
         {
             this.type = type;
             if (hndlr == null)
             {
                 AddConsoleHandle(hndlr += OnConsoleExit);
+            }
+            if (!suppressConsoleResize)
+            {
+                Console.BufferHeight = short.MaxValue - 1;
+                Console.BufferWidth = short.MaxValue - 1;
             }
         }
 

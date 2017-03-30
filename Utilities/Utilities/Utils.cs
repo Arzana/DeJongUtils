@@ -5,6 +5,9 @@
     /// <summary>
     /// Contains general utility functions.
     /// </summary>
+#if !DEBUG
+    [System.Diagnostics.DebuggerStepThrough]
+#endif
     public static class Utils
     {
         /// <summary>

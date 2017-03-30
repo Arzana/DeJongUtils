@@ -3,7 +3,7 @@ using System;
 
 namespace Mentula.Utilities.Collections
 {
-    public static partial class Linq
+    public static partial class ArrayExtensions
     {
         public static bool All(this string source, Predicate<char> selector)
         {

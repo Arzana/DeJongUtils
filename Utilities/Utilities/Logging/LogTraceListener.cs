@@ -3,6 +3,9 @@
     using System.Diagnostics;
     using System.Text;
 
+#if !DEBUG
+    [DebuggerStepThrough]
+#endif
     internal sealed class LogTraceListener : TraceListener
     {
         private StringBuilder sb;

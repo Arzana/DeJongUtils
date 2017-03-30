@@ -6,7 +6,7 @@ namespace Mentula.Utilities.Collections
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
 #endif
-    public static partial class Linq
+    public static partial class ArrayExtensions
     {
         private delegate bool InvalidCastPredicate<TSource, TResult>(TSource element, out TResult result);
 
@@ -110,7 +110,7 @@ namespace Mentula.Utilities.Collections
 
         private static void RaiseLinqEsception(string method, Exception inner)
         {
-            LoggedException.Raise(nameof(Linq), $"{method} has encountered an unhandled exception", inner);
+            LoggedException.Raise(nameof(ArrayExtensions), $"{method} has encountered an unhandled exception", inner);
         }
     }
 }

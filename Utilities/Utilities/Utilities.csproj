@@ -43,10 +43,10 @@
   <ItemGroup>
     <Compile Include="Collections\ArrayEnumerable.cs" />
     <Compile Include="Collections\ArrayEnumerator.cs" />
-    <Compile Include="Collections\Linq_Numeric.cs" />
-    <Compile Include="Collections\Linq_Private.cs" />
-    <Compile Include="Collections\Linq_Public.cs" />
-    <Compile Include="Collections\Linq_String.cs" />
+    <Compile Include="Collections\ArrayExtensions_Numeric.cs" />
+    <Compile Include="Collections\ArrayExtensions_Private.cs" />
+    <Compile Include="Collections\ArrayExtensions_Public.cs" />
+    <Compile Include="Collections\ArrayExtensions_String.cs" />
     <Compile Include="Core\LoggedException.cs" />
     <Compile Include="Core\ExtraMath.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
@@ -59,7 +59,7 @@
     <Compile Include="Logging\LogTraceListener.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Threading\StopAbleThread.cs" />
+    <Compile Include="Threading\StopableThread.cs" />
     <Compile Include="Threading\ThreadBuilder.cs.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

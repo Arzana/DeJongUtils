@@ -4,32 +4,37 @@
     using Core;
     using System;
     using System.Threading;
+    using System.Diagnostics;
 
     /// <summary>
     /// Contains a continually ticking STA background thread.
     /// </summary>
-    public sealed class StopAbleThread : IDisposable
+#if !DEBUG
+    [DebuggerStepThrough]
+#endif
+    [DebuggerDisplay("TID={thread.ManagedThreadId} {(running ? \"running\" : \"stopped\")}")]
+    public sealed class StopableThread : IDisposable
     {
         private Thread thread;
         private bool running, stop;
         private ThreadStart init, term, tick;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StopAbleThread"/> class.
+        /// Initializes a new instance of the <see cref="StopableThread"/> class.
         /// </summary>
         /// <param name="init"> The function to call when initialzing the run loop (can be <see langword="null"/>). </param>
         /// <param name="term"> The function to call when terminating the run loop (can be <see langword="null"/>). </param>
         /// <param name="tick"> The function that handles the thread tick, cannot be <see langword="null"/>. </param>
-        public StopAbleThread(ThreadStart init, ThreadStart term, ThreadStart tick)
+        public StopableThread(ThreadStart init, ThreadStart term, ThreadStart tick)
         {
-            LoggedException.RaiseIf(tick == null, nameof(StopAbleThread), "Unable to create thread!", new ArgumentNullException("tick", "tick cannot be null!"));
+            LoggedException.RaiseIf(tick == null, nameof(StopableThread), "Unable to create thread!", new ArgumentNullException("tick", "tick cannot be null!"));
             this.init = init;
             this.term = term;
             this.tick = tick;
             thread = ThreadBuilder.CreateSTA(Run);
         }
 
-        ~StopAbleThread()
+        ~StopableThread()
         {
             Dispose();
             GC.SuppressFinalize(this);
@@ -51,7 +56,7 @@
         {
             if (running)
             {
-                Log.Warning(nameof(StopAbleThread), "Attempted to start already running thread, call ignored.");
+                Log.Warning(nameof(StopableThread), "Attempted to start already running thread, call ignored.");
                 return;
             }
 
@@ -82,7 +87,7 @@
         private void Run()
         {
             running = true;
-            Log.Info(nameof(StopAbleThread), $"Initializing thread({thread.ManagedThreadId})");
+            Log.Info(nameof(StopableThread), $"Initializing thread({thread.ManagedThreadId})");
             if (init != null) init();
 
             while (!stop)
@@ -91,7 +96,7 @@
                 Thread.Sleep(10);
             }
 
-            Log.Info(nameof(StopAbleThread), $"Terminating thread({thread.ManagedThreadId})");
+            Log.Info(nameof(StopableThread), $"Terminating thread({thread.ManagedThreadId})");
             if (term != null) term();
             running = false;
         }

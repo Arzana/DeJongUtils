@@ -8,7 +8,7 @@
 
     public static partial class Log
     {
-        private static StopAbleThread logThread;
+        private static StopableThread logThread;
         private static List<LogMessage> preBuffer;
         private static Queue<LogMessage> msgbuffer;
 
@@ -23,7 +23,7 @@
 
             AddDebug();
 
-            logThread = new StopAbleThread(null, null, PipeTick);
+            logThread = new StopableThread(null, null, PipeTick);
             logThread.Start();
         }
 

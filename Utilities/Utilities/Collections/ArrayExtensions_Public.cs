@@ -2,7 +2,7 @@
 
 namespace Mentula.Utilities.Collections
 {
-    public static partial class Linq
+    public static partial class ArrayExtensions
     {
         public static TSource[] Add<TSource>(this TSource[] source, TSource item)
         {

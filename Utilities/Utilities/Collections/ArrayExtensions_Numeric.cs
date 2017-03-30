@@ -1,6 +1,6 @@
 ﻿namespace Mentula.Utilities.Collections
 {
-    public static partial class Linq
+    public static partial class ArrayExtensions
     {
         public static float Average(this sbyte[] source)
         {

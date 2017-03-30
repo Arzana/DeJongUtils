@@ -13,6 +13,10 @@ namespace Mentula.Utilities.Core
     [Serializable]
     public class LoggedException : Exception
     {
+        /// <inheritdoc/>
+        public override string StackTrace { get { return string.IsNullOrEmpty(stackTrace) ? base.StackTrace : stackTrace; } }
+        private string stackTrace;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggedException"/> class.
         /// </summary>
@@ -36,7 +40,7 @@ namespace Mentula.Utilities.Core
         /// <param name="tag"> The object that caused the exception. </param>
         public static void Raise(string tag)
         {
-            LoggedException e = new LoggedException();
+            LoggedException e = new LoggedException() { stackTrace = Environment.StackTrace };
             Log.Fatal(tag, e);
             throw e;
         }
@@ -48,7 +52,7 @@ namespace Mentula.Utilities.Core
         /// <param name="message"> The specified message. </param>
         public static void Raise(string tag, string message)
         {
-            LoggedException e = new LoggedException(message);
+            LoggedException e = new LoggedException(message) { stackTrace = Environment.StackTrace };
             Log.Fatal(tag, e);
             throw e;
         }
@@ -61,7 +65,7 @@ namespace Mentula.Utilities.Core
         /// <param name="inner"> The exception that caused the exception. </param>
         public static void Raise(string tag, string message, Exception inner)
         {
-            LoggedException e = new LoggedException(message, inner);
+            LoggedException e = new LoggedException(message, inner) { stackTrace = Environment.StackTrace };
             Log.Fatal(tag, e);
             throw e;
         }
