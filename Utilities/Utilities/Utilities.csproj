@@ -58,7 +58,8 @@
     <Compile Include="Logging\LogMessage.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Threading.cs.cs" />
+    <Compile Include="Threading\StopAbleThread.cs" />
+    <Compile Include="Threading\ThreadBuilder.cs.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

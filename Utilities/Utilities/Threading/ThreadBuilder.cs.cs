@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities
+﻿namespace Mentula.Utilities.Threading
 {
     using Logging;
     using System.Diagnostics;
@@ -10,7 +10,7 @@
 #if !DEBUG
     [DebuggerStepThrough]
 #endif
-    public static class Threading
+    public static class ThreadBuilder
     {
         /// <summary>
         /// Runs a specified function in a STA thread.
@@ -48,7 +48,7 @@
         public static Thread CreateBackground(ThreadStart func)
         {
             Thread t = new Thread(func) { IsBackground = true };
-            Log.Info(nameof(Threading), $"Created background thread({t.ManagedThreadId})");
+            Log.Info(nameof(ThreadBuilder), $"Created background thread({t.ManagedThreadId})");
             return t;
         }
 

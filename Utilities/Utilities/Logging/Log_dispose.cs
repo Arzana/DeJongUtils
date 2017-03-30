@@ -1,17 +1,10 @@
 ﻿namespace Mentula.Utilities.Logging
 {
     using System;
-    using System.Threading;
 
     public static partial class Log
     {
         private static EnsureDisposeObj obj;
-
-        internal static void WaitTillStop()
-        {
-            stop = true;
-            while (running) Thread.Sleep(100);
-        }
 
         private class EnsureDisposeObj : IDisposable
         {
@@ -33,7 +26,7 @@
                     Disposing = true;
                 }
 
-                WaitTillStop();
+                logThread.StopWait();
                 Disposed = true;
             }
         }

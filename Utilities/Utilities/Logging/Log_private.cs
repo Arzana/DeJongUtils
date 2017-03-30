@@ -2,15 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
+    using Threading;
 
     public static partial class Log
     {
-        private static Thread logThread;
+        private static StopAbleThread logThread;
         private static List<LogMessage> preBuffer;
         private static Queue<LogMessage> msgbuffer;
-
-        private static bool running, stop;
 
         static Log()
         {
@@ -19,7 +17,7 @@
             preBuffer = new List<LogMessage>();
             msgbuffer = new Queue<LogMessage>();
 
-            logThread = Threading.CreateSTA(PipeRun);
+            logThread = new StopAbleThread(null, null, PipeTick);
             logThread.Start();
         }
 
@@ -27,32 +25,23 @@
         {
             lock (preBuffer)
             {
-                preBuffer.Add(new LogMessage(type, Threading.GetCurrentProcessId(), Threading.GetCurrentThreadId(), tag, message));
+                preBuffer.Add(new LogMessage(type, ThreadBuilder.GetCurrentProcessId(), ThreadBuilder.GetCurrentThreadId(), tag, message));
             }
         }
 
         [STAThread]
-        private static void PipeRun()
+        private static void PipeTick()
         {
-            running = true;
-            Info(nameof(Log), "Starting log thread");
-
-            while (!stop)
+            lock (preBuffer)
             {
-                lock (preBuffer)
+                lock (msgbuffer)
                 {
-                    lock (msgbuffer)
+                    while (preBuffer.Count > 0)
                     {
-                        while (preBuffer.Count > 0)
-                        {
-                            msgbuffer.Enqueue(GetNext());
-                        }
+                        msgbuffer.Enqueue(GetNext());
                     }
                 }
             }
-
-            Info(nameof(Log), "Stopping log thread");
-            running = false;
         }
 
         private static LogMessage GetNext()

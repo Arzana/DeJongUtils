@@ -29,6 +29,15 @@
             else Log.Error(nameof(Console), $"Could not add handler errorcode: {GetLastError()}");
         }
 
+        internal static void RemoveConsoleHandle(ConsoleExitHandler handler)
+        {
+            if (SetConsoleCtrlHandler(handler, false))
+            {
+                Log.Info(nameof(Console), $"Removed {handler?.Method.Name} to the console handlers");
+            }
+            else Log.Error(nameof(Console), $"Could not remove handler errorcode: {GetLastError()}");
+        }
+
         [DllImport("Kernel32.dll")]
         private static extern bool SetConsoleCtrlHandler(ConsoleExitHandler handler, bool add);
 

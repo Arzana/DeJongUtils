@@ -1,6 +1,8 @@
 ﻿namespace Mentula.Utilities.Logging
 {
+    using Threading;
     using System;
+    using System.Threading;
     using static NativeMethods;
 
     /// <summary>
@@ -36,7 +38,30 @@
         /// </summary>
         public static ConsoleColor FatalColor { get; set; } = ConsoleColor.DarkRed;
 
+        public bool AutoUpdate
+        {
+            get { return autoUpd; }
+            set
+            {
+                if (value == autoUpd) return;
+
+                if (value)
+                {
+                    updThread = new StopAbleThread(null, null, Update);
+                    updThread.Start();
+                }
+                else
+                {
+                    if (updThread != null) updThread.Stop();
+                }
+
+                autoUpd = value;
+            }
+        }
+
         private LogOutputType type;
+        private StopAbleThread updThread;
+        private bool cHndlSet, autoUpd;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ConsoleLogger"/> class with a specified output type.
@@ -45,6 +70,17 @@
         public ConsoleLogger(LogOutputType type = LogOutputType.ThreadTime)
         {
             this.type = type;
+            if (!cHndlSet)
+            {
+                AddConsoleHandle(OnConsoleExit);
+                cHndlSet = true;
+            }
+        }
+
+        ~ConsoleLogger()
+        {
+            RemoveConsoleHandle(OnConsoleExit);
+            cHndlSet = false;
         }
 
         /// <summary>
@@ -75,7 +111,7 @@
 
         private static bool OnConsoleExit(CtrlType sig)
         {
-            Log.WaitTillStop();
+            Log.Verbose(nameof(ConsoleLogger), $"Console signal {sig} received, closing console.");
 
             switch (sig)
             {

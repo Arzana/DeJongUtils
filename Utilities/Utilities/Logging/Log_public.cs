@@ -1,5 +1,6 @@
 ﻿namespace Mentula.Utilities.Logging
 {
+    using Threading;
     using System;
     using System.Diagnostics;
 
@@ -49,7 +50,7 @@
         /// <param name="message"> The specified message to be logged. </param>
         public static void Fatal(string tag, Exception e)
         {
-            int pid = Threading.GetCurrentProcessId(), tid = Threading.GetCurrentThreadId();
+            int pid = ThreadBuilder.GetCurrentProcessId(), tid = ThreadBuilder.GetCurrentThreadId();
 
             lock (preBuffer)
             {

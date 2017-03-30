@@ -65,5 +65,20 @@ namespace Mentula.Utilities.Core
             Log.Fatal(tag, e);
             throw e;
         }
+
+        public static void RaiseIf(bool condition, string tag)
+        {
+            if (condition) Raise(tag);
+        }
+
+        public static void RaiseIf(bool condition, string tag, string message)
+        {
+            if (condition) Raise(tag, message);
+        }
+
+        public static void RaiseIf(bool condition, string tag, string message, Exception inner)
+        {
+            if (condition) Raise(tag, message, inner);
+        }
     }
 }
