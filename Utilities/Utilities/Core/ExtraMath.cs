@@ -29,11 +29,11 @@
         /// <summary>
         /// Performs inverse linear interpolation on the specified values.
         /// </summary>
+        /// <param name="value"> The value to inverse lerp. </param>
         /// <param name="min"> The specified minimum. </param>
         /// <param name="max"> The specfied maximum. </param>
-        /// <param name="value"> The value to inverse lerp. </param>
         /// <returns> The original value before the interpolation. </returns>
-        public static float InvLerp(float min, float max, float value)
+        public static float InvLerp(float value, float min, float max)
         {
             return (value - min) / (max - min);
         }

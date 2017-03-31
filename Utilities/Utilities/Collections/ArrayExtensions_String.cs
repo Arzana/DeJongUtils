@@ -74,7 +74,7 @@ namespace Mentula.Utilities.Collections
         public static char First(this string source)
         {
             NullCheck(source);
-            return source.First(t => true);
+            return source[0];
         }
 
         public static char First(this string source, Predicate<char> selector)
@@ -82,15 +82,9 @@ namespace Mentula.Utilities.Collections
             NullCheck(source, selector, true);
             return FirstInternal(source, selector, () => 
             {
-                RaiseLinqEsception(nameof(First), new InvalidOperationException("No match found!"));
+                RaiseLinqException(nameof(First), new InvalidOperationException("No match found!"));
                 return '\0';
             });
-        }
-
-        public static char FirstOrDefault(this string source)
-        {
-            NullCheck(source);
-            return source.FirstOrDefault(t => true);
         }
 
         public static char FirstOrDefault(this string source, Predicate<char> selector)
@@ -120,7 +114,7 @@ namespace Mentula.Utilities.Collections
         public static char Last(this string source)
         {
             NullCheck(source);
-            return source.Last(t => true);
+            return source[source.Length - 1];
         }
 
         public static char Last(this string source, Predicate<char> selector)
@@ -128,15 +122,9 @@ namespace Mentula.Utilities.Collections
             NullCheck(source, selector, true);
             return LastInternal(source, selector, () =>
             {
-                RaiseLinqEsception(nameof(First), new InvalidOperationException("No match found!"));
+                RaiseLinqException(nameof(First), new InvalidOperationException("No match found!"));
                 return '\0';
             });
-        }
-
-        public static char LastOrDefault(this string source)
-        {
-            NullCheck(source);
-            return source.LastOrDefault(t => true);
         }
 
         public static char LastOrDefault(this string source, Predicate<char> selector)
@@ -155,7 +143,7 @@ namespace Mentula.Utilities.Collections
         {
             NullCheck(source);
             if (options == StringSplitOptions.None) return source.SplitAndKeep(seperators, addToPrevious);
-            return source.SplitAndKeep(seperators, addToPrevious).RemoveNull(string.Empty);
+            return source.SplitAndKeep(seperators, addToPrevious).Remove(string.Empty);
         }
 
         public static string[] SplitAndKeep(this string source, char[] seperators, bool addToPrevious)
@@ -167,11 +155,11 @@ namespace Mentula.Utilities.Collections
             int startAdder = addToPrevious ? 0 : 1, endAdder = addToPrevious ? 0 : 1;
             while ((index = source.IndexOfAny(seperators, start)) != -1)
             {
-                if (index - start > 0) result = result.Add(source.Substring(start - startAdder, index - start + 1));
+                if (index - start > 0) result = result.Concat(source.Substring(start - startAdder, index - start + 1));
                 start = index == start ? index + 1 : index;
             }
 
-            if (start < source.Length) result = result.Add(source.Substring(start - startAdder));
+            if (start < source.Length) result = result.Concat(source.Substring(start - startAdder));
             return result;
         }
 

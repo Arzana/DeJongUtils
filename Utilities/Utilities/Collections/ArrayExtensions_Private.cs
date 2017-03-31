@@ -104,11 +104,11 @@ namespace Mentula.Utilities.Collections
 
             if (!string.IsNullOrEmpty(arg))
             {
-                RaiseLinqEsception(nameof(NullCheckInternal), new ArgumentNullException($"The {arg} cannot be null!", (Exception)null));
+                RaiseLinqException(nameof(NullCheckInternal), new ArgumentNullException($"The {arg} cannot be null!", (Exception)null));
             }
         }
 
-        private static void RaiseLinqEsception(string method, Exception inner)
+        private static void RaiseLinqException(string method, Exception inner)
         {
             LoggedException.Raise(nameof(ArrayExtensions), $"{method} has encountered an unhandled exception", inner);
         }
