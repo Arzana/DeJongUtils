@@ -17,12 +17,6 @@ namespace Mentula.Utilities.Collections
             return true;
         }
 
-        public static bool Any(this string source)
-        {
-            NullCheck(source);
-            return source.Any(t => true);
-        }
-
         public static bool Any(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -83,7 +77,7 @@ namespace Mentula.Utilities.Collections
             return FirstInternal(source, selector, () => 
             {
                 RaiseLinqException(nameof(First), new InvalidOperationException("No match found!"));
-                return '\0';
+                return default(char);
             });
         }
 
@@ -123,7 +117,7 @@ namespace Mentula.Utilities.Collections
             return LastInternal(source, selector, () =>
             {
                 RaiseLinqException(nameof(First), new InvalidOperationException("No match found!"));
-                return '\0';
+                return default(char);
             });
         }
 
