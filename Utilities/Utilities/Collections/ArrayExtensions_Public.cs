@@ -2,6 +2,9 @@
 
 namespace Mentula.Utilities.Collections
 {
+    /// <summary>
+    /// Defines frequently used functions on arrays.
+    /// </summary>
     public static partial class ArrayExtensions
     {
         /// <summary>
@@ -187,7 +190,7 @@ namespace Mentula.Utilities.Collections
         /// Returns whether the collection contains a specified element.
         /// </summary>
         /// <typeparam name="TSource"> The type of elements. </typeparam>
-        /// <param name="source"> The array to check. </param>
+        /// <param name="source"> The source array. </param>
         /// <param name="value"> The value to try an find. </param>
         /// <returns> <see langword="true"/> if the collections contains an element that meets the set of criteria; otherwise <see langword="false"/>. </returns>
         /// <exception cref="Core.LoggedException"> The source array was <see langword="null"/>. </exception>
@@ -202,7 +205,7 @@ namespace Mentula.Utilities.Collections
         /// Return whether the collections contains a elements the meets the specified set of criteria.
         /// </summary>
         /// <typeparam name="TSource"> The type of elements. </typeparam>
-        /// <param name="source"> The source type. </param>
+        /// <param name="source"> The source array. </param>
         /// <param name="selector"> The set of criteria to be met. </param>
         /// <returns> <see langword="true"/> when the collection contains an element that meets the criteria; otherwise <see langword="false"/>. </returns>
         /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
