@@ -29,7 +29,7 @@
                 Log.Debug(nameof(EventInvoker), $"{sender} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
-                catch (TargetInvocationException e) { throw new InvokeException(e); }
+                catch (TargetInvocationException e) { InvokeException.Raise(nameof(EventInvoker), e); }
             }
         }
 
@@ -53,7 +53,7 @@
                 Log.Debug(nameof(EventInvoker), $"{sender} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
-                catch (TargetInvocationException e) { throw new InvokeException(e); }
+                catch (TargetInvocationException e) { InvokeException.Raise(nameof(EventInvoker), e); }
             }
         }
     }

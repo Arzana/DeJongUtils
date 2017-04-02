@@ -19,11 +19,16 @@
         private bool setObjData;
         private TargetInvocationException ex;
 
-        internal InvokeException(TargetInvocationException e)
-            : base(e.InnerException.Message, e.InnerException.InnerException)
+        internal InvokeException(string tag, TargetInvocationException e)
+            : base(tag, e.InnerException.Message, e.InnerException.InnerException)
         {
             ex = e;
             CreateStackTrace();
+        }
+
+        internal static void Raise(string tag, TargetInvocationException e)
+        {
+            throw new InvokeException(tag, e);
         }
 
         /// <inheritdoc/>

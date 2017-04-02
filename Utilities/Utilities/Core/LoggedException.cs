@@ -20,20 +20,35 @@ namespace Mentula.Utilities.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggedException"/> class.
         /// </summary>
-        public LoggedException()
+        /// <param name="tag"> The object that caused the exception. </param>
+        public LoggedException(string tag)
             : base("An unspecified error occured")
-        { }
+        {
+            Init(tag);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggedException"/> class with a specified message.
         /// </summary>
+        /// <param name="tag"> The object that caused the exception. </param>
         /// <param name="message"> The specific message. </param>
-        public LoggedException(string message) : base(message) { }
+        public LoggedException(string tag, string message) 
+            : base(message)
+        {
+            Init(tag);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggedException"/> class with a specfied message and an inner exception.
         /// </summary>
         /// <param name="message"> The specific message. </param>
+        /// <param name="tag"> The object that caused the exception. </param>
         /// <param name="inner"> The exception that caused this exception. </param>
-        public LoggedException(string message, Exception inner) : base(message, inner) { }
+        public LoggedException(string tag, string message, Exception inner) 
+            : base(message, inner)
+        {
+            Init(tag);
+        }
 
         /// <inheritdoc/>
         protected LoggedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
@@ -44,9 +59,7 @@ namespace Mentula.Utilities.Core
         /// <param name="tag"> The object that caused the exception. </param>
         public static void Raise(string tag)
         {
-            LoggedException e = new LoggedException() { stackTrace = Environment.StackTrace };
-            Log.Fatal(tag, e);
-            throw e;
+            throw new LoggedException(tag);
         }
 
         /// <summary>
@@ -56,9 +69,7 @@ namespace Mentula.Utilities.Core
         /// <param name="message"> The specified message. </param>
         public static void Raise(string tag, string message)
         {
-            LoggedException e = new LoggedException(message) { stackTrace = Environment.StackTrace };
-            Log.Fatal(tag, e);
-            throw e;
+            throw new LoggedException(tag, message);
         }
 
         /// <summary>
@@ -69,9 +80,7 @@ namespace Mentula.Utilities.Core
         /// <param name="inner"> The exception that caused the exception. </param>
         public static void Raise(string tag, string message, Exception inner)
         {
-            LoggedException e = new LoggedException(message, inner) { stackTrace = Environment.StackTrace };
-            Log.Fatal(tag, e);
-            throw e;
+            throw new LoggedException(tag, message, inner);
         }
 
         /// <summary>
@@ -105,6 +114,12 @@ namespace Mentula.Utilities.Core
         public static void RaiseIf(bool condition, string tag, string message, Exception inner)
         {
             if (condition) Raise(tag, message, inner);
+        }
+
+        private void Init(string tag)
+        {
+            stackTrace = Environment.StackTrace;
+            Log.Fatal(tag, this);
         }
     }
 }
