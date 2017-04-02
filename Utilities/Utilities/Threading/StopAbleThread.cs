@@ -71,6 +71,12 @@
         /// </remarks>
         public void Stop()
         {
+            if (!running)
+            {
+                Log.Warning(nameof(StopableThread), "Attempted to stop not running thread, call ignored.");
+                return;
+            }
+
             stop = true;
         }
 

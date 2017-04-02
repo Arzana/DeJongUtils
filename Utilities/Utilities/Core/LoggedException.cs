@@ -20,7 +20,9 @@ namespace Mentula.Utilities.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggedException"/> class.
         /// </summary>
-        public LoggedException() { }
+        public LoggedException()
+            : base("An unspecified error occured")
+        { }
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggedException"/> class with a specified message.
         /// </summary>
@@ -32,6 +34,8 @@ namespace Mentula.Utilities.Core
         /// <param name="message"> The specific message. </param>
         /// <param name="inner"> The exception that caused this exception. </param>
         public LoggedException(string message, Exception inner) : base(message, inner) { }
+
+        /// <inheritdoc/>
         protected LoggedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>

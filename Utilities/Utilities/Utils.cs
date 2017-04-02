@@ -1,6 +1,7 @@
 ﻿namespace Mentula.Utilities
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Contains general utility functions.
@@ -11,9 +12,28 @@
     public static class Utils
     {
         /// <summary>
+        /// The base hash to be used with <see cref="ComputeHash{T}(int, T)"/>.
+        /// </summary>
+        public const int HASH_BASE = unchecked((int)2166136261);
+        private const int HASH_MOD = 16777619;
+
+        /// <summary>
         /// A global random used throughout this library.
         /// </summary>
         public static Random Rng { get; private set; } = new Random();
+
+        /// <summary>
+        /// Computes the new hash value with a specified object.
+        /// </summary>
+        /// <typeparam name="T"> The type of object. </typeparam>
+        /// <param name="prevHash"> The previous hash value (<see cref="HASH_BASE"/> as start value). </param>
+        /// <param name="obj"> The object to use with computing the new hash. </param>
+        /// <returns> The new hash value. </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ComputeHash<T>(int prevHash, T obj)
+        {
+            return prevHash * HASH_MOD ^ obj.GetHashCode();
+        }
 
         /// <summary>
         /// Tries to convert from a specified source to a destination type.

@@ -47,8 +47,12 @@
     <Compile Include="Collections\ArrayExtensions_Private.cs" />
     <Compile Include="Collections\ArrayExtensions_Public.cs" />
     <Compile Include="Collections\ArrayExtensions_String.cs" />
+    <Compile Include="Core\EventInvoker.cs" />
+    <Compile Include="Core\InvokeException.cs" />
     <Compile Include="Core\LoggedException.cs" />
     <Compile Include="Core\ExtraMath.cs" />
+    <Compile Include="Core\NoStackTraceException.cs" />
+    <Compile Include="Core\StrongEventHandler.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\LogOutputType.cs" />
     <Compile Include="Logging\Log_dispose.cs" />
