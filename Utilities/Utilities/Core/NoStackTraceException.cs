@@ -14,7 +14,7 @@
         /// <inheritdoc/>
         public override string StackTrace { get { return null; } }
         /// <inheritdoc/>
-        new public NoStackTraceException InnerException { get; private set; }
+        new public NoStackTraceException InnerException { get { return (NoStackTraceException)base.InnerException; } }
         /// <summary>
         /// Gets the original stacktrace.
         /// </summary>
