@@ -11,7 +11,7 @@
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
 #endif
-    public class ConsoleLogger
+    public class ConsoleLogger : IDisposable
     {
         /// <summary>
         /// The color used for logging verbose messages; default value=White
@@ -87,7 +87,8 @@
 
         ~ConsoleLogger()
         {
-            RemoveConsoleHandle(hndlr -= OnConsoleExit);
+            Dispose();
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -114,6 +115,13 @@
             }
 
             Console.ForegroundColor = oldColor;
+        }
+
+        public void Dispose()
+        {
+            RemoveConsoleHandle(hndlr -= OnConsoleExit);
+            updThread.Dispose();
+            Log.Dispose();
         }
 
         private static bool OnConsoleExit(CtrlType sig)

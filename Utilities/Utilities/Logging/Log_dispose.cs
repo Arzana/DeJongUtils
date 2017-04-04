@@ -6,6 +6,11 @@
     {
         private static EnsureDisposeObj obj;
 
+        internal static void Dispose()
+        {
+            obj.Dispose();
+        }
+
         private class EnsureDisposeObj : IDisposable
         {
             public bool Disposed { get; private set; }
@@ -22,7 +27,11 @@
             {
                 lock (locker)
                 {
-                    if (Disposed || Disposing) return;
+                    if (Disposed || Disposing)
+                    {
+                        Warning(nameof(Log), "Attempted to dispose disposing or disposed log");
+                        return;
+                    }
                     Disposing = true;
                 }
 

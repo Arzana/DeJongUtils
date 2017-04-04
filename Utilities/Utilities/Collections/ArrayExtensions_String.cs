@@ -58,6 +58,28 @@ namespace Mentula.Utilities.Collections
         }
 
         /// <summary>
+        /// Appends a specified <see cref="char"/> to a <see cref="string"/>
+        /// but only if it doesn't end with one of the valid suffixes already.
+        /// </summary>
+        /// <param name="source"> The source <see cref="string"/>. </param>
+        /// <param name="validEnds"> The valid suffixes. </param>
+        /// <param name="value"> The specific <see cref="char"/> to be added. </param>
+        /// <returns> The result <see cref="string"/>. </returns>
+        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
+        public static string AppendIfNecessary(this string source, char[] validEnds, char value)
+        {
+            NullCheck(source);
+            char end = source[source.Length - 1];
+
+            for (int i = 0; i < validEnds.Length; i++)
+            {
+                if (end == validEnds[i]) return source;
+            }
+
+            return source + value;
+        }
+
+        /// <summary>
         /// Returns whether the <see cref="string"/> contains a specified element.
         /// </summary>
         /// <param name="source"> The source <see cref="string"/>. </param>

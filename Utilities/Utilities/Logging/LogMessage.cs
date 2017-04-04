@@ -1,5 +1,6 @@
 ﻿namespace Mentula.Utilities.Logging
 {
+    using Collections;
     using System;
     using System.Diagnostics;
 
@@ -41,6 +42,8 @@
         /// This message is returned by <see cref="Log.PopLog"/> when no message is left.
         /// </summary>
         public static readonly LogMessage Empty = new LogMessage();
+
+        private static readonly char[] VALID_SUFFIX_CHARS = { '.', '?', '!' };
 
         private LogMessage()
         {
@@ -95,6 +98,30 @@
                 default:
                     return string.Empty;
             }
+        }
+
+        internal void SetMsgSuffix()
+        {
+            char suffix;
+
+            switch (Type)
+            {
+                case LogMessageType.Verbose:
+                case LogMessageType.Debug:
+                case LogMessageType.Info:
+                    suffix = '.';
+                    break;
+                case LogMessageType.Warning:
+                case LogMessageType.Error:
+                case LogMessageType.Fatal:
+                    suffix = '!';
+                    break;
+                default:
+                    suffix = '?';
+                    break;
+            }
+
+            Message = Message.AppendIfNecessary(VALID_SUFFIX_CHARS, suffix);
         }
     }
 }

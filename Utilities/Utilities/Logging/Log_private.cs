@@ -45,13 +45,15 @@
         [STAThread]
         private static void PipeTick()
         {
-            lock (preBuffer)
+            lock (msgbuffer)
             {
-                lock (msgbuffer)
+                while (preBuffer.Count > 0)
                 {
-                    while (preBuffer.Count > 0)
+                    lock (preBuffer)
                     {
-                        msgbuffer.Enqueue(GetNext());
+                        LogMessage msg = GetNext();
+                        msg.SetMsgSuffix();
+                        msgbuffer.Enqueue(msg);
                     }
                 }
             }

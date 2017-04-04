@@ -56,5 +56,14 @@
                 return false;
             }
         }
+
+        /// <summary>
+        /// Propts the user the message 'Press any key to continue...' and waits for the user to press a key.
+        /// </summary>
+        public static void PressAnyKeyToContinue()
+        {
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
     }
 }
