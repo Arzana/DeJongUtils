@@ -1,8 +1,8 @@
 ﻿namespace Mentula.Utilities.Logging
 {
-    using Threading;
+    using Core;
     using System;
-    using System.Threading;
+    using Threading;
     using static NativeMethods;
 
     /// <summary>
@@ -11,7 +11,7 @@
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
 #endif
-    public class ConsoleLogger : IDisposable
+    public class ConsoleLogger : IFullyDisposable
     {
         /// <summary>
         /// The color used for logging verbose messages; default value=White
@@ -68,6 +68,11 @@
         /// </summary>
         public bool DynamicPadding { get; set; }
 
+        /// <inheritdoc/>
+        public bool Disposed { get; private set; }
+        /// <inheritdoc/>
+        public bool Disposing { get; private set; }
+
         private LogOutputType type;
         private StopableThread updThread;
         private ConsoleExitHandler hndlr;
@@ -92,9 +97,12 @@
             }
         }
 
+        /// <summary>
+        /// Disposes and finalizes the <see cref="ConsoleLogger"/>
+        /// </summary>
         ~ConsoleLogger()
         {
-            Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -132,11 +140,23 @@
             Console.ForegroundColor = oldColor;
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
+            Dispose(false);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose(bool disposing)
+        {
+            Disposing = true;
+
+            if (disposing) Log.Dispose();
             RemoveConsoleHandle(hndlr -= OnConsoleExit);
             updThread.Dispose();
-            Log.Dispose();
+
+            Disposing = false;
+            Disposed = true;
         }
 
         private static bool OnConsoleExit(CtrlType sig)

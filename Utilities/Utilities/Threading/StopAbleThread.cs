@@ -13,8 +13,13 @@
     [DebuggerStepThrough]
 #endif
     [DebuggerDisplay("TID={thread.ManagedThreadId} {(running ? \"running\" : \"stopped\")}")]
-    public sealed class StopableThread : IDisposable
+    public sealed class StopableThread : IFullyDisposable
     {
+        /// <inheritdoc/>
+        public bool Disposed { get; private set; }
+        /// <inheritdoc/>
+        public bool Disposing { get; private set; }
+
         private Thread thread;
         private bool running, stop;
         private ThreadStart init, term, tick;
@@ -34,19 +39,40 @@
             thread = ThreadBuilder.CreateSTA(Run);
         }
 
+        /// <summary>
+        /// Disposes and finalizes the <see cref="StopableThread"/>.
+        /// </summary>
         ~StopableThread()
         {
-            Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
 
         /// <summary>
-        /// Disposes the thread safely.
+        /// Disposes the thread unsafely.
         /// </summary>
         public void Dispose()
         {
-            StopWait();
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Disposes the thread safely or unsafely.
+        /// </summary>
+        /// <param name="disposing"> Whether the method should wait for the thread to exit. </param>
+        public void Dispose(bool disposing)
+        {
+            Disposing = true;
+
+            if (disposing)
+            {
+                StopWait();
+            }
+            else Stop();
+
+            Disposing = false;
+            Disposed = true;
         }
 
         /// <summary>
@@ -94,7 +120,7 @@
         {
             running = true;
             Log.Info(nameof(StopableThread), $"Initializing thread({thread.ManagedThreadId})");
-            if (init != null) init();
+            init?.Invoke();
 
             while (!stop)
             {
@@ -103,7 +129,7 @@
             }
 
             Log.Info(nameof(StopableThread), $"Terminating thread({thread.ManagedThreadId})");
-            if (term != null) term();
+            term?.Invoke();
             running = false;
         }
     }

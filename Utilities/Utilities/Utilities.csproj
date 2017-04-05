@@ -49,6 +49,7 @@
     <Compile Include="Collections\ArrayExtensions_Public.cs" />
     <Compile Include="Collections\ArrayExtensions_String.cs" />
     <Compile Include="Core\EventInvoker.cs" />
+    <Compile Include="Core\IFullyDisposable.cs" />
     <Compile Include="Core\InvokeException.cs" />
     <Compile Include="Core\LoggedException.cs" />
     <Compile Include="Core\ExtraMath.cs" />
