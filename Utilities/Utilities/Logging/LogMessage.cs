@@ -52,7 +52,7 @@
             PId = -1;
             TId = -1;
             Tag = "NULL";
-            Message = string.Empty;
+            Message = "NULL";
         }
 
         internal LogMessage(LogMessageType type, int pId, int tId, string tag, string message)
@@ -62,7 +62,7 @@
             PId = pId;
             TId = tId;
             Tag = tag;
-            Message = message;
+            Message = string.IsNullOrEmpty(message) ? "NULL" : message;
         }
 
         /// <summary>
@@ -75,29 +75,43 @@
         }
 
         /// <summary>
-        /// Gets the line that should be printed with the specified output type.
+        /// Gets the header line that should be printed with the specified output type.
         /// </summary>
-        /// <param name="type"> The way the message should be represented. </param>
-        /// <returns> A string containing the message in the specified output format. </returns>
-        public string GetLogLine(LogOutputType type)
+        /// <param name="type"> The way the header should be represented. </param>
+        /// <returns> A string containing the header in the specified output format. </returns>
+        public string GetLogHeaderLine(LogOutputType type)
         {
             switch (type)
             {
                 case LogOutputType.Brief:
-                    return $"[{PId}][{Type}][{Tag}]: {Message}";
+                    return $"[{PId}][{Type}][{Tag}]";
                 case LogOutputType.Process:
-                    return $"[{PId}]: {Message}";
+                    return $"[{PId}]";
                 case LogOutputType.Tag:
-                    return $"[{Type}][{Tag}]: {Message}";
-                case LogOutputType.Raw:
-                    return Message;
+                    return $"[{Type}][{Tag}]";
                 case LogOutputType.Time:
-                    return $"[{GetTimeStamp()}][{PId}][{Type}][{Tag}]: {Message}";
+                    return $"[{GetTimeStamp()}][{PId}][{Type}][{Tag}]";
                 case LogOutputType.ThreadTime:
-                    return $"[{GetTimeStamp()}][{PId}/{TId}][{Type}][{Tag}]: {Message}";
+                    return $"[{GetTimeStamp()}][{PId}/{TId}][{Type}][{Tag}]";
                 default:
                     return string.Empty;
             }
+        }
+
+        /// <summary>
+        /// Gets the line that should be printed with the specified output type.
+        /// </summary>
+        /// <param name="type"> The way the header should be represented. </param>
+        /// <returns> A string containing the header and the message in the specified output format. </returns>
+        public string GetLogLine(LogOutputType type)
+        {
+            return GetLogHeaderLine(type) + $": {Message}";
+        }
+
+        internal void SetMsgPreffix()
+        {
+            char preffix = Message.First();
+            if (char.IsLower(preffix)) Message = char.ToUpper(preffix) + Message.Substring(1, Message.Length - 1);
         }
 
         internal void SetMsgSuffix()

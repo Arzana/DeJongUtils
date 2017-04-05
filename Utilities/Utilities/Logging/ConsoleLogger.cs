@@ -62,10 +62,17 @@
             }
         }
 
+        /// <summary>
+        /// Gets or set a value indicating whether the <see cref="ConsoleLogger"/>
+        /// should dynamicaly pad the message header.
+        /// </summary>
+        public bool DynamicPadding { get; set; }
+
         private LogOutputType type;
         private StopableThread updThread;
         private ConsoleExitHandler hndlr;
         private bool autoUpd;
+        private int hdrPad;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ConsoleLogger"/> class with a specified output type.
@@ -111,7 +118,15 @@
                     case LogMessageType.Fatal: Console.ForegroundColor = FatalColor; break;
                 }
 
-                Console.WriteLine(msg.GetLogLine(type));
+                if (DynamicPadding)
+                {
+                    string header = msg.GetLogHeaderLine(type);
+                    if (header.Length + 2 > hdrPad) hdrPad = header.Length + 2;
+
+                    Console.Write($"{header}: ".PadRight(hdrPad));
+                    Console.Write($"{msg.Message}{Environment.NewLine}");
+                }
+                else Console.WriteLine(msg.GetLogLine(type));
             }
 
             Console.ForegroundColor = oldColor;

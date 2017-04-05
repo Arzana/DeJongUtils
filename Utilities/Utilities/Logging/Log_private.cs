@@ -52,6 +52,7 @@
                     lock (preBuffer)
                     {
                         LogMessage msg = GetNext();
+                        msg.SetMsgPreffix();
                         msg.SetMsgSuffix();
                         msgbuffer.Enqueue(msg);
                     }
@@ -62,13 +63,6 @@
         private static LogMessage GetNext()
         {
             LogMessage result = preBuffer[0];
-
-            for (int i = 0; i < preBuffer.Count; i++)
-            {
-                LogMessage cur = preBuffer[i];
-                if ((int)cur.Type > (int)result.Type) result = cur;
-            }
-
             preBuffer.Remove(result);
             return result;
         }

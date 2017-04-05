@@ -10,7 +10,7 @@
 
         public static void Main(string[] args)
         {
-            logger = new ConsoleLogger() { AutoUpdate = true };
+            logger = new ConsoleLogger() { AutoUpdate = true, DynamicPadding = true };
 
             Log.Debug(nameof(Program), Console.ReadLine());
             Utils.PressAnyKeyToContinue();
