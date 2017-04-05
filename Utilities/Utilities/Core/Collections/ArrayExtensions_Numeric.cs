@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Collections
+﻿namespace Mentula.Utilities.Core.Collections
 {
     public static partial class ArrayExtensions
     {

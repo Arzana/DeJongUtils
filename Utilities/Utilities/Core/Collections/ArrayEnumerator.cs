@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Mentula.Utilities.Collections
+namespace Mentula.Utilities.Core.Collections
 {
     /// <summary>
     /// Defines an enumarator that can be used to iterate through a collection.

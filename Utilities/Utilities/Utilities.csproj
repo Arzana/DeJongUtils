@@ -42,12 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\ArrayEnumerable.cs" />
-    <Compile Include="Collections\ArrayEnumerator.cs" />
-    <Compile Include="Collections\ArrayExtensions_Numeric.cs" />
-    <Compile Include="Collections\ArrayExtensions_Private.cs" />
-    <Compile Include="Collections\ArrayExtensions_Public.cs" />
-    <Compile Include="Collections\ArrayExtensions_String.cs" />
+    <Compile Include="Core\Collections\ArrayEnumerable.cs" />
+    <Compile Include="Core\Collections\ArrayEnumerator.cs" />
+    <Compile Include="Core\Collections\ArrayExtensions_Numeric.cs" />
+    <Compile Include="Core\Collections\ArrayExtensions_Private.cs" />
+    <Compile Include="Core\Collections\ArrayExtensions_Public.cs" />
+    <Compile Include="Core\Collections\ArrayExtensions_String.cs" />
     <Compile Include="Core\EventInvoker.cs" />
     <Compile Include="Core\IFullyDisposable.cs" />
     <Compile Include="Core\InvokeException.cs" />

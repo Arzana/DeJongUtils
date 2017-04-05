@@ -1,6 +1,6 @@
 ﻿namespace Mentula.Utilities.Logging
 {
-    using Collections;
+    using Core.Collections;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;

@@ -1,7 +1,7 @@
 ﻿using Mentula.Utilities.Core;
 using System;
 
-namespace Mentula.Utilities.Collections
+namespace Mentula.Utilities.Core.Collections
 {
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]

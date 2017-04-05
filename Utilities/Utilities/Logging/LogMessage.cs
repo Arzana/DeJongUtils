@@ -1,6 +1,6 @@
 ﻿namespace Mentula.Utilities.Logging
 {
-    using Collections;
+    using Core.Collections;
     using System;
     using System.Diagnostics;
 
@@ -90,9 +90,9 @@
                 case LogOutputType.Tag:
                     return $"[{Type}][{Tag}]";
                 case LogOutputType.Time:
-                    return $"[{GetTimeStamp()}][{PId}][{Type}][{Tag}]";
+                    return $"[{GetTimeStamp()}][{PId:00000}][{Type}][{Tag}]";
                 case LogOutputType.ThreadTime:
-                    return $"[{GetTimeStamp()}][{PId}/{TId}][{Type}][{Tag}]";
+                    return $"[{GetTimeStamp()}][{PId:00000}/{TId:00}][{Type}][{Tag}]";
                 default:
                     return string.Empty;
             }
