@@ -1,6 +1,7 @@
 ﻿namespace Mentula.Utilities.Core
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     //
     // Summary:
@@ -20,11 +21,5 @@
         /// Whether the object is currently disposing.
         /// </summary>
         bool Disposing { get; }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <param name="disposing"> Whether unmanaged resources should be freeed. </param>
-        void Dispose(bool disposing);
     }
 }

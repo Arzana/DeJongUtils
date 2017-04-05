@@ -102,8 +102,7 @@
         /// </summary>
         ~ConsoleLogger()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            Dispose(false);
         }
 
         /// <summary>
@@ -146,17 +145,23 @@
             Dispose(false);
         }
 
-        /// <inheritdoc/>
-        public void Dispose(bool disposing)
+        /// <summary>
+        /// Disposes the managed and unmanaged data of the <see cref="ConsoleLogger"/>.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
         {
-            Disposing = true;
+            if (!(Disposed || Disposing))
+            {
+                Disposing = true;
 
-            if (disposing) Log.Dispose();
-            RemoveConsoleHandle(hndlr -= OnConsoleExit);
-            updThread.Dispose();
+                if (disposing) Log.Dispose();
+                RemoveConsoleHandle(hndlr -= OnConsoleExit);
+                updThread.Dispose();
 
-            Disposing = false;
-            Disposed = true;
+                Disposing = false;
+                Disposed = true;
+            }
         }
 
         private static bool OnConsoleExit(CtrlType sig)

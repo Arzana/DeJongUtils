@@ -61,18 +61,21 @@
         /// Disposes the thread safely or unsafely.
         /// </summary>
         /// <param name="disposing"> Whether the method should wait for the thread to exit. </param>
-        public void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            Disposing = true;
-
-            if (disposing)
+            if (!(Disposed || Disposing))
             {
-                StopWait();
-            }
-            else Stop();
+                Disposing = true;
 
-            Disposing = false;
-            Disposed = true;
+                if (disposing)
+                {
+                    StopWait();
+                }
+                else Stop();
+
+                Disposing = false;
+                Disposed = true;
+            }
         }
 
         /// <summary>

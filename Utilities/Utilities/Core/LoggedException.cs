@@ -16,7 +16,7 @@ namespace Mentula.Utilities.Core
         /// <inheritdoc/>
         public override string StackTrace { get { return string.IsNullOrEmpty(stackTrace) ? base.StackTrace : stackTrace; } }
         private string stackTrace;
-
+        private string tag;
         /// <summary>
         /// Initializes a new instance of the <see cref="LoggedException"/> class.
         /// </summary>
@@ -48,6 +48,12 @@ namespace Mentula.Utilities.Core
             : base(message, inner)
         {
             Init(tag);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Tag", tag);
+            base.GetObjectData(info, context);
         }
 
         /// <inheritdoc/>
@@ -119,7 +125,7 @@ namespace Mentula.Utilities.Core
         private void Init(string tag)
         {
             stackTrace = Environment.StackTrace;
-            Log.Fatal(tag, this);
+            Log.Fatal(this.tag = tag, this);
         }
     }
 }

@@ -10,13 +10,13 @@
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
 #endif
+    [Serializable]
     public sealed class InvokeException : LoggedException
     {
         /// <inheritdoc/>
         public override string StackTrace { get { return stackTrace + base.StackTrace; } }
 
         private string stackTrace;
-        private bool setObjData;
         private TargetInvocationException ex;
 
         internal InvokeException(string tag, TargetInvocationException e)
@@ -34,11 +34,7 @@
         /// <inheritdoc/>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (!setObjData)
-            {
-                setObjData = true;
-                info.AddValue("Internal exception", ex);
-            }
+            info.AddValue("Internal exception", ex);
             base.GetObjectData(info, context);
         }
 

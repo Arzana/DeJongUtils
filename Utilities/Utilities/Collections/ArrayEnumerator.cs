@@ -12,7 +12,7 @@ namespace Mentula.Utilities.Collections
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
 #endif
-    public class ArrayEnumerator<T> : IEnumerator<T>
+    public class ArrayEnumerator<T> : IEnumerator<T>, IFullyDisposable
     {
         /// <summary>
         /// Gets the element in the collection at the current position of the enumerator.
@@ -26,6 +26,8 @@ namespace Mentula.Utilities.Collections
         /// Gets a value indicating if the <see cref="ArrayEnumerator{T}"/> has beed disposed.
         /// </summary>
         public bool Disposed { get; private set; }
+        /// <inheritdoc/>
+        public bool Disposing { get; private set; }
 
         private T[] array;
         private int index;
@@ -45,10 +47,20 @@ namespace Mentula.Utilities.Collections
         /// </summary>
         public void Dispose()
         {
-            if (!Disposed)
+            Dispose(false);
+        }
+
+        /// <inheritdoc/>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!(Disposed || Disposing))
             {
+                Disposing = true;
+
                 Reset();
-                array = null;
+                if (disposing) array = null;
+
+                Disposing = false;
                 Disposed = true;
             }
         }

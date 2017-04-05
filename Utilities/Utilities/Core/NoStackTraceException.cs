@@ -9,6 +9,7 @@
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
 #endif
+    [Serializable]
     public class NoStackTraceException : LoggedException
     {
         /// <inheritdoc/>
@@ -58,6 +59,13 @@
         {
             BaseType = source.GetType();
             BaseStackTrace = source.StackTrace;
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("OriginalType", BaseType);
+            info.AddValue("BaseStacktrace", BaseStackTrace);
+            base.GetObjectData(info, context);
         }
 
         /// <inheritdoc/>
