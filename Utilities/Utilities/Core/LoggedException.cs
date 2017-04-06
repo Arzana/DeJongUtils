@@ -50,6 +50,7 @@ namespace Mentula.Utilities.Core
             Init(tag);
         }
 
+        /// <inheritdoc/>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Tag", tag);

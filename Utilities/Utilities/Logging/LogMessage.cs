@@ -43,7 +43,7 @@
         /// </summary>
         public static readonly LogMessage Empty = new LogMessage();
 
-        private static readonly char[] VALID_SUFFIX_CHARS = { '.', '?', '!' };
+        private static readonly char[] VALID_SUFFIX_CHARS = { '.', '?', '!', ':', ';' };
 
         private LogMessage()
         {

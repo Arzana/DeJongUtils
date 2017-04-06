@@ -83,6 +83,7 @@
         /// Creates a new instance of the <see cref="ConsoleLogger"/> class with a specified output type.
         /// </summary>
         /// <param name="type"> The output type of the logger. </param>
+        /// <param name="suppressConsoleResize"> Whether to suppress the console buffer from getting resized. </param>
         public ConsoleLogger(LogOutputType type = LogOutputType.ThreadTime, bool suppressConsoleResize = false)
         {
             this.type = type;

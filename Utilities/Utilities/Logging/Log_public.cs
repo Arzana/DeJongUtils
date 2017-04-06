@@ -47,7 +47,7 @@
         /// Logs a exception with fatal priority.
         /// </summary>
         /// <param name="tag"> The tag of the caller. </param>
-        /// <param name="message"> The specified message to be logged. </param>
+        /// <param name="e"> The specified message to be logged. </param>
         public static void Fatal(string tag, Exception e)
         {
             int pid = ThreadBuilder.GetCurrentProcessId(), tid = ThreadBuilder.GetCurrentThreadId();

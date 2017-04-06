@@ -61,6 +61,7 @@
             BaseStackTrace = source.StackTrace;
         }
 
+        /// <inheritdoc/>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("OriginalType", BaseType);
