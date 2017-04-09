@@ -10,7 +10,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="selector"> The set of criteria to be met. </param>
         /// <returns> <see langword="true"/> if all elements meet the criteria; otherwise <see langword="false"/>. </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         public static bool All(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -29,7 +29,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="selector"> The set of criteria to be met. </param>
         /// <returns> <see langword="true"/> if at least 1 element meets to criteria; otherwise <see langword="false"/>. </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         public static bool Any(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -48,7 +48,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="value"> The specfic <see cref="char"/> to be added. </param>
         /// <returns> The result <see cref="string"/>. </returns>
-        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/>. </exception>
         public static string AppendIfNecessary(this string source, char value)
         {
             NullCheck(source);
@@ -65,7 +65,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="validEnds"> The valid suffixes. </param>
         /// <param name="value"> The specific <see cref="char"/> to be added. </param>
         /// <returns> The result <see cref="string"/>. </returns>
-        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/>. </exception>
         public static string AppendIfNecessary(this string source, char[] validEnds, char value)
         {
             NullCheck(source);
@@ -85,7 +85,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="value"> The value to try an find. </param>
         /// <returns> <see langword="true"/> if the <see cref="string"/> contains an element that meets the set of criteria; otherwise <see langword="false"/>. </returns>
-        /// <exception cref="Core.LoggedException"> The source array was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source array was <see langword="null"/>. </exception>
         public static bool Contains(this string source, char value)
         {
             NullCheck(source);
@@ -98,7 +98,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="selector"> The set of criteria to be met. </param>
         /// <returns> <see langword="true"/> when the <see cref="string"/> contains an element that meets the criteria; otherwise <see langword="false"/>. </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         public static bool Contains(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -117,7 +117,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="selector"> The set of criteria to be met. </param>
         /// <returns> The amount of elements in the <see cref="string"/> that have met the specified set of criteria. </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         public static int Count(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -139,7 +139,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
         public static char First(this string source)
         {
-            NullCheck(source);
+            NullOrEmptyCheck(source);
             return source[0];
         }
 
@@ -149,7 +149,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="selector"> The set of criteria to be met. </param>
         /// <returns> The first element of the <see cref="string"/> to meet the criteria. </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         /// <exception cref="Core.LoggedException"> No element matches the specified set of criteria. </exception>
         public static char First(this string source, Predicate<char> selector)
         {
@@ -171,7 +171,7 @@ namespace Mentula.Utilities.Core.Collections
         /// The first element of the <see cref="string"/> to meet the criteria,
         /// if no such element is found; return '\0'.
         /// </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         public static char FirstOrDefault(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -184,7 +184,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="value"> The value to get the index from. </param>
         /// <returns> The index of the specified value, if no such element is found; returns -1. </returns>
-        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/>. </exception>
         public static int IndexOf(this string source, char value)
         {
             NullCheck(source);
@@ -197,7 +197,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="selector"> The set of criteria to be met. </param>
         /// <returns> The index of the first element to meet the specified criteria; otherwise -1. </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         public static int IndexOf(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -218,7 +218,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
         public static char Last(this string source)
         {
-            NullCheck(source);
+            NullOrEmptyCheck(source);
             return source[source.Length - 1];
         }
 
@@ -228,7 +228,7 @@ namespace Mentula.Utilities.Core.Collections
         /// <param name="source"> The source <see cref="string"/>. </param>
         /// <param name="selector"> The set of cirteria to be met. </param>
         /// <returns> The last element in the <see cref="string"/> that meets the criteria. </returns>
-        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source or the selector was <see langword="null"/>. </exception>
         public static char Last(this string source, Predicate<char> selector)
         {
             NullCheck(source, selector, true);
@@ -268,7 +268,7 @@ namespace Mentula.Utilities.Core.Collections
         /// An array whose elements contain the substrings from this instance that are delimited
         /// by one or more characters in separator.
         /// </returns>
-        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/>. </exception>
         public static string[] SplitAndKeep(this string source, params char[] seperators)
         {
             NullCheck(source);
@@ -294,7 +294,7 @@ namespace Mentula.Utilities.Core.Collections
         /// by one or more characters in separator.
         /// </returns>
         /// <exception cref="ArgumentException"> option is not one of the <see cref="StringSplitOptions"/> values. </exception>
-        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/>. </exception>
         public static string[] SplitAndKeep(this string source, char[] seperators, bool addToPrevious, StringSplitOptions options)
         {
             NullCheck(source);
@@ -315,7 +315,7 @@ namespace Mentula.Utilities.Core.Collections
         /// An array whose elements contain the substrings in this <see cref="string"/> that are delimited
         /// by one or more characters in separator.
         /// </returns>
-        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/> or empty. </exception>
+        /// <exception cref="Core.LoggedException"> The source was <see langword="null"/>. </exception>
         public static string[] SplitAndKeep(this string source, char[] seperators, bool addToPrevious)
         {
             NullCheck(source);
@@ -334,25 +334,39 @@ namespace Mentula.Utilities.Core.Collections
         }
 
         /// <summary>
-        /// Removes all elements equal to the specified <see cref="char"/> from the <see cref="string"/>.
+        /// Removes all elements equal to the specified <see cref="char"/>s from the <see cref="string"/>.
         /// </summary>
         /// <param name="source"> The source <see cref="string"/>. </param>
-        /// <param name="value"> The <see cref="char"/> to be removed. </param>
-        /// <returns> An <see cref="string"/> without the specified <see cref="char"/>. </returns>
-        public static string Remove(this string source, char value)
+        /// <param name="values"> The <see cref="char"/>s to be removed. </param>
+        /// <returns> An <see cref="string"/> without the specified <see cref="char"/>s. </returns>
+        public static string Remove(this string source, params char[] values)
         {
-            return source.Remove(value.ToString());
+            string result = source;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                result = result.Replace(values[i].ToString(), string.Empty);
+            }
+
+            return result;
         }
 
         /// <summary>
-        /// Removes all substrings equal to the specified substring from the <see cref="string"/>.
+        /// Removes all substrings equal to the specified substrings from the <see cref="string"/>.
         /// </summary>
         /// <param name="source"> The source <see cref="string"/>. </param>
-        /// <param name="value"> The substring to be removed. </param>
-        /// <returns> An <see cref="string"/> without the specified substring. </returns>
-        public static string Remove(this string source, string value)
+        /// <param name="values"> The substrings to be removed. </param>
+        /// <returns> An <see cref="string"/> without the specified substrings. </returns>
+        public static string Remove(this string source, params string[] values)
         {
-            return source.Replace(value, string.Empty);
+            string result = source;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                result = result.Replace(values[i], string.Empty);
+            }
+
+            return result;
         }
     }
 }

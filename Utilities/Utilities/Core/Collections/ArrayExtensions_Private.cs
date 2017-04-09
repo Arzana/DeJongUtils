@@ -87,9 +87,14 @@ namespace Mentula.Utilities.Core.Collections
             NullCheckInternal(array == null, del, hasDel);
         }
 
-        private static void NullCheck(string array, Delegate del = null, bool hasDel = false)
+        private static void NullOrEmptyCheck(string array, Delegate del = null, bool hasDel = false)
         {
             NullCheckInternal(string.IsNullOrEmpty(array), del, hasDel);
+        }
+
+        private static void NullCheck(string array, Delegate del = null, bool hasDel = false)
+        {
+            NullCheckInternal(array == null, del, hasDel);
         }
 
         private static void NullCheckInternal(bool arrayNull, Delegate del, bool hasDel)
