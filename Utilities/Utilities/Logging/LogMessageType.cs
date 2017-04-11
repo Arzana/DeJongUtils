@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Logging
+﻿namespace DeJong.Utilities.Logging
 {
     /// <summary>
     /// Defines the priority of a <see cref="LogMessage"/>.

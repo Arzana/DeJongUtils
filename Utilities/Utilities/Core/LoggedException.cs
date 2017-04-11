@@ -1,8 +1,8 @@
-﻿using Mentula.Utilities.Logging;
+﻿using DeJong.Utilities.Logging;
 using System;
 using System.Runtime.Serialization;
 
-namespace Mentula.Utilities.Core
+namespace DeJong.Utilities.Core
 {
     /// <summary>
     /// Represents errors that are logged to the <see cref="Log"/>.

@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Logging
+﻿namespace DeJong.Utilities.Logging
 {
     using Threading;
     using System;

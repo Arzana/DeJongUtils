@@ -1,9 +1,9 @@
-﻿using Mentula.Utilities.Core;
+﻿using DeJong.Utilities.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Mentula.Utilities.Core.Collections
+namespace DeJong.Utilities.Core.Collections
 {
     /// <summary>
     /// Defines an enumarator that can be used to iterate through a collection.

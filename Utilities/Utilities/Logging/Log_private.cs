@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Logging
+﻿namespace DeJong.Utilities.Logging
 {
     using Core.Collections;
     using System;
@@ -11,7 +11,6 @@
         private static StopableThread logThread;
         private static List<LogMessage> preBuffer;
         private static Queue<LogMessage> msgbuffer;
-
         private static LogTraceListener listener;
 
         static Log()

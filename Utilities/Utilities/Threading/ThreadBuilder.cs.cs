@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Threading
+﻿namespace DeJong.Utilities.Threading
 {
     using Logging;
     using System.Diagnostics;

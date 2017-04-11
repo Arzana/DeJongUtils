@@ -7,7 +7,7 @@
     <ProjectGuid>{8D97561A-66DE-4CD7-B232-9E12330EE945}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mentula.Utilities</RootNamespace>
+    <RootNamespace>DeJong.Utilities</RootNamespace>
     <AssemblyName>Utilities</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,6 +54,8 @@
     <Compile Include="Core\LoggedException.cs" />
     <Compile Include="Core\ExtraMath.cs" />
     <Compile Include="Core\NoStackTraceException.cs" />
+    <Compile Include="Core\OutAction.cs" />
+    <Compile Include="Core\OutFunc.cs" />
     <Compile Include="Core\StrongEventHandler.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\LogOutputType.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Threading\StopableThread.cs" />
     <Compile Include="Threading\ThreadBuilder.cs.cs" />
+    <Compile Include="Threading\ThreadSafeQueue.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

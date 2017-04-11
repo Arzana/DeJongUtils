@@ -1,7 +1,7 @@
 ﻿namespace Test
 {
-    using Mentula.Utilities;
-    using Mentula.Utilities.Logging;
+    using DeJong.Utilities;
+    using DeJong.Utilities.Logging;
     using System;
 
     public static class Program

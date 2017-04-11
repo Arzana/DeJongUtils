@@ -1,7 +1,7 @@
-﻿using Mentula.Utilities.Core;
+﻿using DeJong.Utilities.Core;
 using System;
 
-namespace Mentula.Utilities.Core.Collections
+namespace DeJong.Utilities.Core.Collections
 {
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]

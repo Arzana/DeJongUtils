@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Core
+﻿namespace DeJong.Utilities.Core
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

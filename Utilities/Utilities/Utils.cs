@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities
+﻿namespace DeJong.Utilities
 {
     using System;
     using System.Runtime.CompilerServices;

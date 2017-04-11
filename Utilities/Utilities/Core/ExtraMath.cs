@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Core
+﻿namespace DeJong.Utilities.Core
 {
     using static System.Math;
 

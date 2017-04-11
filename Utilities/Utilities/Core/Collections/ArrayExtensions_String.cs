@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mentula.Utilities.Core.Collections
+namespace DeJong.Utilities.Core.Collections
 {
     public static partial class ArrayExtensions
     {

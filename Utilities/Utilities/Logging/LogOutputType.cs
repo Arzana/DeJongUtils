@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Logging
+﻿namespace DeJong.Utilities.Logging
 {
     /// <summary>
     /// Defines how a <see cref="LogMessage"/> should be printed.
