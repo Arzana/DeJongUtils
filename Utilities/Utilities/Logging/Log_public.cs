@@ -1,8 +1,8 @@
 ﻿namespace DeJong.Utilities.Logging
 {
-    using Threading;
     using System;
     using System.Diagnostics;
+    using Threading;
 
     /// <summary>
     /// Represents a general logging pipeline.
@@ -65,10 +65,7 @@
         /// <returns> The next message, if there is one; otherwise, <see cref="LogMessage.Empty"/>. </returns>
         public static LogMessage PopLog()
         {
-            lock (msgbuffer)
-            {
-                return msgbuffer.Count > 0 ? msgbuffer.Dequeue() : LogMessage.Empty;
-            }
+            return msgbuffer.Count > 0 ? msgbuffer.Dequeue() : LogMessage.Empty;
         }
     }
 }
