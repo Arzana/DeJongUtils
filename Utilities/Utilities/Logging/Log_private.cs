@@ -10,7 +10,7 @@
     {
         private static StopableThread logThread;
         private static List<LogMessage> preBuffer;
-        private static Queue<LogMessage> msgbuffer;
+        private static ThreadSafeQueue<LogMessage> msgbuffer;
         private static LogTraceListener listener;
 
         static Log()
@@ -18,7 +18,7 @@
             obj = new EnsureDisposeObj();
 
             preBuffer = new List<LogMessage>();
-            msgbuffer = new Queue<LogMessage>();
+            msgbuffer = new ThreadSafeQueue<LogMessage>();
 
             AddDebug();
 
@@ -44,17 +44,14 @@
         [STAThread]
         private static void PipeTick()
         {
-            lock (msgbuffer)
+            while (preBuffer.Count > 0)
             {
-                while (preBuffer.Count > 0)
+                lock (preBuffer)
                 {
-                    lock (preBuffer)
-                    {
-                        LogMessage msg = GetNext();
-                        msg.SetMsgPreffix();
-                        msg.SetMsgSuffix();
-                        msgbuffer.Enqueue(msg);
-                    }
+                    LogMessage msg = GetNext();
+                    msg.SetMsgPreffix();
+                    msg.SetMsgSuffix();
+                    msgbuffer.Enqueue(msg);
                 }
             }
         }

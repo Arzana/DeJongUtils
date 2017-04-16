@@ -102,9 +102,20 @@
         }
 
         /// <summary>
+        /// Dequeue's the first item in the queue.
+        /// </summary>
+        /// <returns> The item at the front of the queue. </returns>
+        /// <exception cref="LoggedException"> The queue was empty. </exception>
+        /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
+        public T Dequeue()
+        {
+            return RunInSafeWriteMode(Dequeue_internal, "Unable to dequeue item");
+        }
+
+        /// <summary>
         /// Attempts to dequeue the first item in the queue.
         /// </summary>
-        /// <param name="item"> The item at the from of the queue, if the queue was empty; default(T). </param>
+        /// <param name="item"> The item at the front of the queue, if the queue was empty; default(T). </param>
         /// <returns> Whether an item was successfully dequeued. </returns>
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public bool TryDequeue(out T item)
@@ -256,6 +267,18 @@
             return true;
         }
 
+        private T Dequeue_internal()
+        {
+            if (size == 0) throw new InvalidOperationException("The queue is empty");
+
+            T result = data[head];
+            data[head] = default(T);
+            head = (head + 1) % data.Length;
+            --size;
+
+            return result;
+        }
+
         private void SkipQueue_internal(T item)
         {
             if (size >= data.Length) SetCapacity(data.Length + SIZE_ADDER);
@@ -349,6 +372,25 @@
             try
             {
                 return func.Invoke(arg);
+            }
+            catch (Exception e)
+            {
+                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
+                return default(TResult);
+            }
+            finally
+            {
+                locker.ExitWriteLock();
+            }
+        }
+
+        private TResult RunInSafeWriteMode<TResult>(Func<TResult> func, string errorMsg)
+        {
+            locker.EnterWriteLock();
+
+            try
+            {
+                return func.Invoke();
             }
             catch (Exception e)
             {

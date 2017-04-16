@@ -29,6 +29,21 @@
         /// <param name="prevHash"> The previous hash value (<see cref="HASH_BASE"/> as start value). </param>
         /// <param name="obj"> The object to use with computing the new hash. </param>
         /// <returns> The new hash value. </returns>
+        /// <remarks>
+        /// Example use:
+        /// <code>
+        /// public override int GetHashCode()
+        /// {
+        ///     unchecked
+        ///     {
+        ///         int hash = HASH_BASE;
+        ///         hash += ComputeHash(hash, field0);
+        ///         hash += ComputeHash(hash, field1);
+        ///         return hash;
+        ///     }
+        /// }
+        /// </code>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ComputeHash<T>(int prevHash, T obj)
         {
