@@ -15,8 +15,8 @@
 #if !DEBUG
     [DebuggerStepThrough]
 #endif
-    [DebuggerDisplay("{{Count={Count}, Capacity={Capacity}}}")]
-    public class ThreadSafeQueue<T> : ArrayEnumerable<T>, ICollection
+    [DebuggerDisplay("{GetDebuggerString()}")]
+    public class ThreadSafeQueue<T> : ArrayEnumerable<T>, ICollection, IFullyDisposable
     {
         /// <summary>
         /// The current capacity of the queue.
@@ -48,6 +48,10 @@
         public object SyncRoot { get { return null; } }
         /// <inheritdoc/>
         public bool IsSynchronized { get { return true; } }
+        /// <inheritdoc/>
+        public bool Disposed { get; private set; }
+        /// <inheritdoc/>
+        public bool Disposing { get; private set; }
 
         private const int SIZE_ADDER = 8;
         private readonly ReaderWriterLockSlim locker;
@@ -69,6 +73,31 @@
         {
             locker = new ReaderWriterLockSlim();
             data = new T[initialCapacity];
+        }
+        /// <summary>
+        /// Terminates this instance of <see cref="ThreadSafeQueue{T}"/>.
+        /// </summary>
+        ~ThreadSafeQueue()
+        {
+            Dispose(false);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Disposes the managed and unmanaged data of the <see cref="ThreadSafeQueue{T}"/>.
+        /// </summary>
+        /// <param name="disposing"> Whether to dispose unmanaged types. </param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!(Disposed || Disposing))
+            {
+                locker.Dispose();
+            }
         }
 
         /// <summary>
@@ -335,7 +364,7 @@
             {
                 return func.Invoke(arg);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
                 return default(TResult);
@@ -411,7 +440,7 @@
             {
                 func.Invoke(arg);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
             }
@@ -421,7 +450,7 @@
             }
         }
 
-        private TResult RunInSafeWriteMode<TResult, TArg>(OutFunc<TResult, TArg> func, out TArg  arg, string errorMsg)
+        private TResult RunInSafeWriteMode<TResult, TArg>(OutFunc<TResult, TArg> func, out TArg arg, string errorMsg)
         {
             locker.EnterWriteLock();
 
@@ -457,6 +486,11 @@
             {
                 locker.ExitWriteLock();
             }
+        }
+
+        private string GetDebuggerString()
+        {
+            return $"{{Count ={Count}, Capacity={Capacity}}}";
         }
     }
 }

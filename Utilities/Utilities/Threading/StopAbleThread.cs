@@ -69,10 +69,7 @@
             {
                 Disposing = true;
 
-                if (disposing)
-                {
-                    StopWait();
-                }
+                if (disposing) StopWait();
                 else Stop();
 
                 Disposing = false;

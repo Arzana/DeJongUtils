@@ -58,7 +58,17 @@
         internal LogMessage(LogMessageType type, int pId, int tId, string tag, string message)
         {
             Type = type;
-            OccuredAt = DateTime.UtcNow;
+            OccuredAt = DateTime.Now;
+            PId = pId;
+            TId = tId;
+            Tag = tag;
+            Message = string.IsNullOrEmpty(message) ? "NULL" : message;
+        }
+
+        internal void ReInit(LogMessageType type, int pId, int tId, string tag, string message)
+        {
+            Type = type;
+            OccuredAt = DateTime.Now;
             PId = pId;
             TId = tId;
             Tag = tag;

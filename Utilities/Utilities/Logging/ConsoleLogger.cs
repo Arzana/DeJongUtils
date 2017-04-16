@@ -2,6 +2,7 @@
 {
     using Core;
     using System;
+    using System.IO;
     using Threading;
     using static NativeMethods;
 
@@ -135,6 +136,8 @@
                     Console.Write($"{msg.Message}{Environment.NewLine}");
                 }
                 else Console.WriteLine(msg.GetLogLine(type));
+
+                Log.FlushLog(msg);
             }
 
             Console.ForegroundColor = oldColor;
@@ -149,7 +152,7 @@
         /// <summary>
         /// Disposes the managed and unmanaged data of the <see cref="ConsoleLogger"/>.
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing"> Whether the global log should be disposed. </param>
         protected virtual void Dispose(bool disposing)
         {
             if (!(Disposed || Disposing))
@@ -157,7 +160,8 @@
                 Disposing = true;
 
                 if (disposing) Log.Dispose();
-                RemoveConsoleHandle(hndlr -= OnConsoleExit);
+                RemoveConsoleHandle(hndlr);
+                hndlr -= OnConsoleExit;
                 updThread.Dispose();
 
                 Disposing = false;

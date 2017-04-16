@@ -13,6 +13,22 @@
     public static partial class Log
     {
         /// <summary>
+        /// Gets or sets the size of the recycling buffer (zero or negative values will result in no message recycling).
+        /// </summary>
+        /// <remarks>
+        /// Default value = 64.
+        /// </remarks>
+        public static int RecycleBufferSize
+        {
+            get { return recycleBufferSize; }
+            set
+            {
+                Verbose(nameof(Log), value > 0 ? $"Recycle buffer size set to {value}" : "Turned off message recycling");
+                recycleBufferSize = value;
+            }
+        }
+
+        /// <summary>
         /// Logs a message with debug priority.
         /// </summary>
         /// <param name="tag"> The tag of the caller. </param>
@@ -66,6 +82,18 @@
         public static LogMessage PopLog()
         {
             return msgbuffer.Count > 0 ? msgbuffer.Dequeue() : LogMessage.Empty;
+        }
+
+        /// <summary>
+        /// Flushes a specified message.
+        /// </summary>
+        /// <param name="msg"> The message to be marked for recycling. </param>
+        public static void FlushLog(LogMessage msg)
+        {
+            if (garbage.Count < RecycleBufferSize)
+            {
+                garbage.Enqueue(msg);
+            }
         }
     }
 }

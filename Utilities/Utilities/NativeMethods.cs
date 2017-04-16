@@ -9,9 +9,9 @@
 #endif
     internal static class NativeMethods
     {
-        internal delegate bool ConsoleExitHandler(CtrlType sig);
+        public delegate bool ConsoleExitHandler(CtrlType sig);
 
-        internal enum CtrlType
+        public enum CtrlType
         {
             CTRL_C_EVENT = 0,
             CTRL_BREAK_EVENT = 1,
@@ -20,7 +20,7 @@
             CTRL_SHUTDOWN_EVENT = 6
         }
 
-        internal static void AddConsoleHandle(ConsoleExitHandler handler)
+        public static void AddConsoleHandle(ConsoleExitHandler handler)
         {
             if (SetConsoleCtrlHandler(handler, true))
             {
@@ -29,7 +29,7 @@
             else Log.Error(nameof(Console), $"Could not add handler errorcode: {GetLastError()}");
         }
 
-        internal static void RemoveConsoleHandle(ConsoleExitHandler handler)
+        public static void RemoveConsoleHandle(ConsoleExitHandler handler)
         {
             if (SetConsoleCtrlHandler(handler, false))
             {

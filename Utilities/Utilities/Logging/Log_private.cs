@@ -9,18 +9,22 @@
     public static partial class Log
     {
         private static StopableThread logThread;
+        private static ThreadSafeQueue<LogMessage> garbage;
         private static List<LogMessage> preBuffer;
         private static ThreadSafeQueue<LogMessage> msgbuffer;
         private static LogTraceListener listener;
+        private static int recycleBufferSize;
 
         static Log()
         {
             obj = new EnsureDisposeObj();
 
+            garbage = new ThreadSafeQueue<LogMessage>();
             preBuffer = new List<LogMessage>();
             msgbuffer = new ThreadSafeQueue<LogMessage>();
 
             AddDebug();
+            RecycleBufferSize = 64;
 
             logThread = new StopableThread(null, null, PipeTick, "LoggingPipelineThread");
             logThread.Start();
@@ -37,7 +41,11 @@
         {
             lock (preBuffer)
             {
-                preBuffer.Add(new LogMessage(type, ThreadBuilder.GetCurrentProcessId(), ThreadBuilder.GetCurrentThreadId(), tag, message));
+                LogMessage msg;
+                if (garbage.TryDequeue(out msg)) msg.ReInit(type, ThreadBuilder.GetCurrentProcessId(), ThreadBuilder.GetCurrentThreadId(), tag, message);
+                else msg = new LogMessage(type, ThreadBuilder.GetCurrentProcessId(), ThreadBuilder.GetCurrentThreadId(), tag, message);
+
+                preBuffer.Add(msg);
             }
         }
 
