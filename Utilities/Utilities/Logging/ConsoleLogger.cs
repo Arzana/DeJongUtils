@@ -50,7 +50,7 @@
 
                 if (value)
                 {
-                    updThread = new StopableThread(null, null, Update);
+                    updThread = new StopableThread(null, null, Update, $"{nameof(ConsoleLogger)}Thread");
                     updThread.Start();
                 }
                 else

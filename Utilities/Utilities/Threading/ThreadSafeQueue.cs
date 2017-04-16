@@ -165,6 +165,23 @@
             RunInSafeWriteMode(Clear_internal, "Unable to clear queue");
         }
 
+        /// <summary>
+        /// Copies the underlying array to the specified array.
+        /// </summary>
+        /// <param name="array"> The destination array. </param>
+        /// <param name="index"> The offset for the destination array. </param>
+        public void CopyTo(Array array, int index)
+        {
+            T[] src = ToArray();
+            Array.Copy(src, 0, array, index, src.Length);
+        }
+
+        /// <inheritdoc/>
+        public override ArrayEnumerator<T> GetEnumerator()
+        {
+            return new ArrayEnumerator<T>(ToArray());
+        }
+
         private void Clear_internal()
         {
             for (int i = 0; i < data.Length; i++)
@@ -398,16 +415,6 @@
             {
                 locker.ExitWriteLock();
             }
-        }
-
-        public void CopyTo(Array array, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override ArrayEnumerator<T> GetEnumerator()
-        {
-            return new ArrayEnumerator<T>(ToArray());
         }
     }
 }

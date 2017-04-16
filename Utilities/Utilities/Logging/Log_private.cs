@@ -22,7 +22,7 @@
 
             AddDebug();
 
-            logThread = new StopableThread(null, null, PipeTick);
+            logThread = new StopableThread(null, null, PipeTick, "LoggingPipelineThread");
             logThread.Start();
         }
 

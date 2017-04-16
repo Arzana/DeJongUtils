@@ -30,13 +30,15 @@
         /// <param name="init"> The function to call when initialzing the run loop (can be <see langword="null"/>). </param>
         /// <param name="term"> The function to call when terminating the run loop (can be <see langword="null"/>). </param>
         /// <param name="tick"> The function that handles the thread tick, cannot be <see langword="null"/>. </param>
-        public StopableThread(ThreadStart init, ThreadStart term, ThreadStart tick)
+        /// <param name="name"> The name of the thread. </param>
+        public StopableThread(ThreadStart init, ThreadStart term, ThreadStart tick, string name = null)
         {
             LoggedException.RaiseIf(tick == null, nameof(StopableThread), "Unable to create thread!", new ArgumentNullException("tick", "tick cannot be null!"));
             this.init = init;
             this.term = term;
             this.tick = tick;
             thread = ThreadBuilder.CreateSTA(Run);
+            if (!string.IsNullOrEmpty(name)) thread.Name = name;
         }
 
         /// <summary>
