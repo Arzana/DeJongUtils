@@ -33,7 +33,7 @@
         /// </summary>
         /// <param name="tag"> The tag of the caller. </param>
         /// <param name="message"> The specified message to be logged. </param>
-        [Conditional("DEBUG")]  // TODO: Fix
+        [Conditional("DEBUG")]
         public static void Debug(string tag, string message) => Message(LogMessageType.Debug, tag, message);
         /// <summary>
         /// Logs a message with error priority.

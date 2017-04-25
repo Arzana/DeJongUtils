@@ -1,9 +1,10 @@
-﻿using DeJong.Utilities.Logging;
-using System;
-using System.Runtime.Serialization;
-
-namespace DeJong.Utilities.Core
+﻿namespace DeJong.Utilities.Core
 {
+    using Logging;
+    using Core.Collections;
+    using System;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Represents errors that are logged to the <see cref="Log"/>.
     /// </summary>
@@ -126,6 +127,7 @@ namespace DeJong.Utilities.Core
         private void Init(string tag)
         {
             stackTrace = Environment.StackTrace;
+            stackTrace = stackTrace.Remove(0, 120);
             Log.Fatal(this.tag = tag, this);
         }
     }

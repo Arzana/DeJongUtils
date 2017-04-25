@@ -2,7 +2,6 @@
 {
     using Core;
     using System;
-    using System.IO;
     using Threading;
     using static NativeMethods;
 
@@ -160,9 +159,12 @@
                 Disposing = true;
 
                 if (disposing) Log.Dispose();
-                RemoveConsoleHandle(hndlr);
-                hndlr -= OnConsoleExit;
-                updThread.Dispose();
+                if (hndlr != null)
+                {
+                    RemoveConsoleHandle(hndlr);
+                    hndlr -= OnConsoleExit;
+                }
+                if (updThread != null) updThread.Dispose();
 
                 Disposing = false;
                 Disposed = true;
