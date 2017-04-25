@@ -60,6 +60,7 @@
     <Compile Include="Logging\LogMessageType.cs" />
     <Compile Include="Logging\LogMessage.cs" />
     <Compile Include="Logging\LogTraceListener.cs" />
+    <Compile Include="Logging\VoidLogger.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Threading\StopableThread.cs" />
