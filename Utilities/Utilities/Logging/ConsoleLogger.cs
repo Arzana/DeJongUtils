@@ -48,15 +48,8 @@
             {
                 if (value == autoUpd) return;
 
-                if (value)
-                {
-                    updThread = new StopableThread(null, null, Update, $"{nameof(ConsoleLogger)}Thread");
-                    updThread.Start();
-                }
-                else
-                {
-                    if (updThread != null) updThread.Stop();
-                }
+                if (value) updThread = StopableThread.StartNew(null, null, Update, $"{nameof(ConsoleLogger)}Thread");
+                else if (updThread != null) updThread.Stop();
 
                 autoUpd = value;
             }

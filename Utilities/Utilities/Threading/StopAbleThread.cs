@@ -50,6 +50,21 @@
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StopableThread"/> class and starts it.
+        /// </summary>
+        /// <param name="init"> The function to call when initialzing the run loop (can be <see langword="null"/>). </param>
+        /// <param name="term"> The function to call when terminating the run loop (can be <see langword="null"/>). </param>
+        /// <param name="tick"> The function that handles the thread tick, cannot be <see langword="null"/>. </param>
+        /// <param name="name"> The name of the thread. </param>
+        /// <returns> The newly created thread. </returns>
+        public static StopableThread StartNew(ThreadStart init, ThreadStart term, ThreadStart tick, string name = null)
+        {
+            StopableThread result = new StopableThread(init, term, tick, name);
+            result.Start();
+            return result;
+        }
+
 
         /// <summary>
         /// Disposes the thread unsafely.

@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading;
     using Threading;
 
     public static partial class Log
@@ -26,8 +27,7 @@
             AddDebug();
             RecycleBufferSize = 64;
 
-            logThread = new StopableThread(null, null, PipeTick, "LoggingPipelineThread");
-            logThread.Start();
+            logThread = StopableThread.StartNew(null, null, PipeTick, "LoggingPipelineThread");
         }
 
         [Conditional("DEBUG")]
@@ -42,8 +42,8 @@
             lock (preBuffer)
             {
                 LogMessage msg;
-                if (garbage.TryDequeue(out msg)) msg.ReInit(type, ThreadBuilder.GetCurrentProcessId(), ThreadBuilder.GetCurrentThreadId(), tag, message);
-                else msg = new LogMessage(type, ThreadBuilder.GetCurrentProcessId(), ThreadBuilder.GetCurrentThreadId(), tag, message);
+                if (garbage.TryDequeue(out msg)) msg.ReInit(type, ThreadBuilder.ProcessID, ThreadBuilder.ThreadID, tag, message);
+                else msg = new LogMessage(type, ThreadBuilder.ProcessID, ThreadBuilder.ThreadID, tag, message);
 
                 preBuffer.Add(msg);
             }

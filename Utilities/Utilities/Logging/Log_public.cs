@@ -66,7 +66,7 @@
         /// <param name="e"> The specified message to be logged. </param>
         public static void Fatal(string tag, Exception e)
         {
-            int pid = ThreadBuilder.GetCurrentProcessId(), tid = ThreadBuilder.GetCurrentThreadId();
+            int pid = ThreadBuilder.ProcessID, tid = ThreadBuilder.ThreadID;
 
             lock (preBuffer)
             {

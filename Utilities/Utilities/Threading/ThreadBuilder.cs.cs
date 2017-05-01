@@ -12,6 +12,9 @@
 #endif
     public static class ThreadBuilder
     {
+        internal static int ProcessID { get { return Process.GetCurrentProcess().Id; } }
+        internal static int ThreadID { get { return Thread.CurrentThread.ManagedThreadId; } }
+
         /// <summary>
         /// Runs a specified function in a STA thread.
         /// </summary>
@@ -50,16 +53,6 @@
             Thread t = new Thread(func) { IsBackground = true };
             Log.Info(nameof(ThreadBuilder), $"Created background thread({t.ManagedThreadId})");
             return t;
-        }
-
-        internal static int GetCurrentProcessId()
-        {
-            return Process.GetCurrentProcess().Id;
-        }
-
-        internal static int GetCurrentThreadId()
-        {
-            return Thread.CurrentThread.ManagedThreadId;
         }
     }
 }

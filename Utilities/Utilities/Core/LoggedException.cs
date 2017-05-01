@@ -127,7 +127,7 @@
         private void Init(string tag)
         {
             stackTrace = Environment.StackTrace;
-            stackTrace = stackTrace.Remove(0, 120);
+            stackTrace = stackTrace.Remove(0, 120); // Remove the stacktrace for getting the stacktrace.
             Log.Fatal(this.tag = tag, this);
         }
     }
