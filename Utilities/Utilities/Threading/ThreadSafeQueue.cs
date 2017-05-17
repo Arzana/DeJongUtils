@@ -96,7 +96,10 @@
         {
             if (!(Disposed || Disposing))
             {
+                Disposing = true;
                 locker.Dispose();
+                Disposing = false;
+                Disposed = true;
             }
         }
 
