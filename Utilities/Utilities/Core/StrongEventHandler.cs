@@ -11,5 +11,7 @@
     /// <param name="sender"> The object that is attempting to invoke the handler. </param>
     /// <param name="e"> The argument for this call. </param>
     [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "Using strong-typed StrongEventHandler event handler pattern.")]
-    public delegate void StrongEventHandler<Tsender, TArgs>(Tsender sender, TArgs e) where TArgs : EventArgs;
+    public delegate void StrongEventHandler<Tsender, TArgs>(Tsender sender, TArgs e) 
+        where TArgs : EventArgs 
+        where Tsender : class;
 }

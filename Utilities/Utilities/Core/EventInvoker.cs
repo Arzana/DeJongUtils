@@ -68,6 +68,7 @@
         /// <exception cref="InvokeException"> An unhandled exception was thrown in the event handler. </exception>
         public static void Invoke<TSender, TEventArgs>(StrongEventHandler<TSender, TEventArgs> handler, TSender sender, TEventArgs args)
             where TEventArgs : EventArgs
+            where TSender : class
         {
             LoggedException.RaiseIf(sender == null, nameof(EventInvoker), "sender cannot be null", new ArgumentNullException("sender"));
 
@@ -126,6 +127,7 @@
         /// <param name="args"> The arguments for this call. </param>
         public static void InvokeSafe<TSender, TEventArgs>(StrongEventHandler<TSender, TEventArgs> handler, TSender sender, TEventArgs args)
             where TEventArgs : EventArgs
+            where TSender : class
         {
             if (handler != null)
             {
