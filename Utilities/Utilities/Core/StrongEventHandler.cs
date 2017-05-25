@@ -9,7 +9,7 @@
     /// <typeparam name="Tsender"> The type of sender. </typeparam>
     /// <typeparam name="TArgs"> The type of arguments. </typeparam>
     /// <param name="sender"> The object that is attempting to invoke the handler. </param>
-    /// <param name="args"> The argument for this call. </param>
+    /// <param name="e"> The argument for this call. </param>
     [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "Using strong-typed StrongEventHandler event handler pattern.")]
-    public delegate void StrongEventHandler<Tsender, TArgs>(Tsender sender, TArgs args) where TArgs : EventArgs;
+    public delegate void StrongEventHandler<Tsender, TArgs>(Tsender sender, TArgs e) where TArgs : EventArgs;
 }
