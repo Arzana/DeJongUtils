@@ -12,17 +12,34 @@
 #if !DEBUG
     [DebuggerStepThrough]
 #endif
-    [DebuggerDisplay("TID={thread.ManagedThreadId} {(running ? \"running\" : \"stopped\")}")]
+    [DebuggerDisplay("{GetDebuggerString()}")]
     public sealed class StopableThread : IFullyDisposable
     {
+        /// <summary>
+        /// Gets or sets a value indicating the time in milliseconds the thread has to sleep after a tick.
+        /// </summary>
+        public int TickCooldown
+        {
+            get { return cooldown; }
+            set
+            {
+                LoggedException.RaiseIf(value < 1, nameof(StopableThread), "Value must be larger than 0");
+                cooldown = value;
+            }
+        }
         /// <inheritdoc/>
         public bool Disposed { get; private set; }
         /// <inheritdoc/>
         public bool Disposing { get; private set; }
+        /// <summary>
+        /// Gets the name of this <see cref="StopableThread"/>.
+        /// </summary>
+        public string Name { get; private set; }
 
         private Thread thread;
-        private bool running, stop;
+        private bool running, stop, nameSet;
         private ThreadStart init, term, tick;
+        private int cooldown;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StopableThread"/> class.
@@ -34,11 +51,13 @@
         public StopableThread(ThreadStart init, ThreadStart term, ThreadStart tick, string name = null)
         {
             LoggedException.RaiseIf(tick == null, nameof(StopableThread), "Unable to create thread!", new ArgumentNullException("tick", "tick cannot be null!"));
+            TickCooldown = 10;
             this.init = init;
             this.term = term;
             this.tick = tick;
-            thread = ThreadBuilder.CreateSTA(Run);
-            if (!string.IsNullOrEmpty(name)) thread.Name = name;
+            Name = name;
+            nameSet = !string.IsNullOrEmpty(name);
+            thread = ThreadBuilder.CreateSTA(Run, name);
         }
 
         /// <summary>
@@ -136,18 +155,23 @@
         private void Run()
         {
             running = true;
-            Log.Info(nameof(StopableThread), $"Initializing thread({thread.ManagedThreadId})");
+            Log.Info(nameof(StopableThread), $"Initializing thread{(nameSet ? $" '{Name}'" : $"({thread.ManagedThreadId})")}");
             init?.Invoke();
 
             while (!stop)
             {
                 tick();
-                Thread.Sleep(10);
+                Thread.Sleep(TickCooldown);
             }
 
-            Log.Info(nameof(StopableThread), $"Terminating thread({thread.ManagedThreadId})");
+            Log.Info(nameof(StopableThread), $"Terminating thread{(nameSet ? $" '{Name}'" : $"({thread.ManagedThreadId})")}");
             term?.Invoke();
             running = false;
+        }
+
+        private string GetDebuggerString()
+        {
+            return $"TID={thread.ManagedThreadId} {(running ? "running" : "stopped")}";
         }
     }
 }

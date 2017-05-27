@@ -91,7 +91,9 @@
         /// <param name="initialCapacity"> The initial size of the list. </param>
         public ThreadSafeList(int initialCapacity)
         {
+            EnterWriteLock();
             EnsureCapacity(initialCapacity);
+            ExitWriteLock();
         }
 
         /// <summary>

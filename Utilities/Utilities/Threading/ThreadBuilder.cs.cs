@@ -28,9 +28,10 @@
         /// Creates a background thread with its appartment set to <see cref="ApartmentState.STA"/>.
         /// </summary>
         /// <param name="function"> The function for the thread to process. </param>
-        public static Thread CreateSTA(ThreadStart function)
+        /// <param name="name"> The name of the thread (Optional). </param>
+        public static Thread CreateSTA(ThreadStart function, string name = "")
         {
-            Thread t = CreateBackground(function);
+            Thread t = CreateBackground(function, name);
             t.SetApartmentState(ApartmentState.STA);
             return t;
         }
@@ -48,10 +49,16 @@
         /// Creates a thread with <see cref="Thread.IsBackground"/> set to <see langword="true"/>.
         /// </summary>
         /// <param name="func"> The function for the thread to process. </param>
-        public static Thread CreateBackground(ThreadStart func)
+        /// <param name="name"> The name of the thread (Optional). </param>
+        public static Thread CreateBackground(ThreadStart func, string name = "")
         {
             Thread t = new Thread(func) { IsBackground = true };
-            Log.Info(nameof(ThreadBuilder), $"Created background thread({t.ManagedThreadId})");
+            if (!string.IsNullOrEmpty(name))
+            {
+                t.Name = name;
+                Log.Info(nameof(ThreadBuilder), $"Created background thread '{t.Name}'({t.ManagedThreadId})");
+            }
+            else Log.Info(nameof(ThreadBuilder), $"Created background thread({t.ManagedThreadId})");
             return t;
         }
     }

@@ -28,7 +28,7 @@
         protected LockableObject()
         {
             locker = new ReaderWriterLockSlim();
-            LockTimeout = 100;
+            LockTimeout = 1000;
         }
 
         /// <summary>

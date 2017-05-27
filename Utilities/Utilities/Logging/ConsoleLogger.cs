@@ -48,7 +48,7 @@
             {
                 if (value == autoUpd) return;
 
-                if (value) updThread = StopableThread.StartNew(null, null, Update, $"{nameof(ConsoleLogger)}Thread");
+                if (value) updThread = StopableThread.StartNew(null, null, Update, nameof(ConsoleLogger));
                 else if (updThread != null) updThread.Stop();
 
                 autoUpd = value;

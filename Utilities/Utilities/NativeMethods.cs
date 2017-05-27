@@ -24,7 +24,7 @@
         {
             if (SetConsoleCtrlHandler(handler, true))
             {
-                Log.Info(nameof(Console), $"Added {handler?.Method.Name} to the console handlers");
+                Log.Verbose(nameof(Console), $"Added {handler?.Method.Name} to the console handlers");
             }
             else Log.Error(nameof(Console), $"Could not add handler errorcode: {GetLastError()}");
         }
@@ -33,7 +33,7 @@
         {
             if (SetConsoleCtrlHandler(handler, false))
             {
-                Log.Info(nameof(Console), $"Removed {handler?.Method.Name} to the console handlers");
+                Log.Verbose(nameof(Console), $"Removed {handler?.Method.Name} to the console handlers");
             }
             else Log.Error(nameof(Console), $"Could not remove handler errorcode: {GetLastError()}");
         }

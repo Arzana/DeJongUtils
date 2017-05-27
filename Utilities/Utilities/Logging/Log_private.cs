@@ -26,7 +26,7 @@
             AddDebug();
             RecycleBufferSize = 64;
 
-            logThread = StopableThread.StartNew(null, null, PipeTick, "LoggingPipelineThread");
+            logThread = StopableThread.StartNew(null, null, PipeTick, "DeJong Logging");
         }
 
         [Conditional("DEBUG")]
