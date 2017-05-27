@@ -2,10 +2,10 @@
 {
     using Core;
     using Core.Collections;
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Threading;
-    using System;
 
     /// <summary>
     /// Represent a generic size thread safe collection of objects.
@@ -15,7 +15,7 @@
     [DebuggerStepThrough]
 #endif
     [DebuggerDisplay("{GetDebuggerString()}")]
-    public class ThreadSafeList<T> : ArrayEnumerable<T>, IList<T>, IFullyDisposable
+    public class ThreadSafeList<T> : LockableObject, IList<T>
     {
         /// <summary>
         /// The current capacity of the list.
@@ -24,9 +24,9 @@
         {
             get
             {
-                locker.EnterReadLock();
+                EnterReadLock();
                 int result = data.Length;
-                locker.ExitReadLock();
+                ExitReadLock();
                 return result;
             }
         }
@@ -36,22 +36,17 @@
         {
             get
             {
-                locker.EnterReadLock();
+                EnterReadLock();
                 int result = size;
-                locker.ExitReadLock();
+                ExitReadLock();
                 return result;
             }
         }
 
         /// <inheritdoc/>
         public bool IsReadOnly { get { return false; } }
-        /// <inheritdoc/>
-        public bool Disposed { get; private set; }
-        /// <inheritdoc/>
-        public bool Disposing { get; private set; }
 
         private const int SIZE_ADDER = 8;
-        private readonly ReaderWriterLockSlim locker;
         private T[] data;
         private int size;
 
@@ -67,9 +62,9 @@
             {
                 LoggedException.RaiseIf(index >= Count, nameof(ThreadSafeList<T>), "index out of range");
 
-                locker.EnterReadLock();
+                EnterReadLock();
                 T result = data[index];
-                locker.ExitReadLock();
+                ExitReadLock();
 
                 return result;
             }
@@ -77,9 +72,9 @@
             {
                 LoggedException.RaiseIf(index >= Count, nameof(ThreadSafeList<T>), "index out of range");
 
-                locker.EnterWriteLock();
+                EnterWriteLock();
                 data[index] = value;
-                locker.ExitWriteLock();
+                ExitWriteLock();
             }
         }
 
@@ -96,7 +91,6 @@
         /// <param name="initialCapacity"> The initial size of the list. </param>
         public ThreadSafeList(int initialCapacity)
         {
-            locker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
             EnsureCapacity(initialCapacity);
         }
 
@@ -108,27 +102,6 @@
             Dispose(false);
         }
 
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Disposes the managed and unmanaged data of the <see cref="ThreadSafeList{T}"/>.
-        /// </summary>
-        /// <param name="disposing"> Whether to dispose unmanaged types. </param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!(Disposed | Disposing))
-            {
-                Disposing = true;
-                locker.Dispose();
-                Disposing = false;
-                Disposed = true;
-            }
-        }
-
         /// <summary>
         /// Gets the index of a specified item.
         /// </summary>
@@ -137,7 +110,7 @@
         public int IndexOf(T item)
         {
             int result = -1;
-            locker.EnterReadLock();
+            EnterReadLock();
 
             for (int i = 0; i < size; i++)
             {
@@ -153,7 +126,7 @@
                 }
             }
 
-            locker.ExitReadLock();
+            ExitReadLock();
             return result;
         }
 
@@ -166,13 +139,13 @@
         public void Insert(int index, T item)
         {
             LoggedException.RaiseIf(index >= Count, nameof(ThreadSafeList<T>), "index out of range");
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             ShiftRight(index);
             data[index] = item;
             ++size;
 
-            locker.ExitWriteLock();
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -183,12 +156,12 @@
         public void RemoveAt(int index)
         {
             LoggedException.RaiseIf(index >= Count, nameof(ThreadSafeList<T>), "index out of range");
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             ShiftLeft(index);
             --size;
 
-            locker.ExitWriteLock();
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -197,13 +170,13 @@
         /// <param name="item"> The item to be added. </param>
         public void Add(T item)
         {
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             EnsureCapacity(size + 1);
             data[size] = item;
             ++size;
 
-            locker.ExitWriteLock();
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -211,12 +184,12 @@
         /// </summary>
         public void Clear()
         {
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             data = new T[0];
             size = 0;
 
-            locker.ExitWriteLock();
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -236,9 +209,9 @@
         /// <param name="arrayIndex"> The index from where to start pasting. </param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            locker.EnterReadLock();
+            EnterReadLock();
             Array.Copy(data, 0, array, arrayIndex, size);
-            locker.ExitReadLock();
+            ExitReadLock();
         }
 
         /// <summary>
@@ -256,9 +229,19 @@
         }
 
         /// <inheritdoc/>
-        public override ArrayEnumerator<T> GetEnumerator()
+        public ArrayEnumerator<T> GetEnumerator()
         {
             return new ArrayEnumerator<T>(data);
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         private void ShiftLeft(int index)

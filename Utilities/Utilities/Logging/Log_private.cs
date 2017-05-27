@@ -4,7 +4,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Threading;
     using Threading;
 
     public static partial class Log
@@ -15,7 +14,6 @@
         private static ThreadSafeQueue<LogMessage> msgbuffer;
         private static LogTraceListener listener;
         private static int recycleBufferSize;
-        private static StackTrace trace;
 
         static Log()
         {
@@ -36,7 +34,6 @@
         {
             System.Diagnostics.Debug.Listeners.Add(listener = new LogTraceListener());
             EventLog.GetEventLogs().First((l) => l.Log == "Application").EntryWritten += LogEvent;
-            trace = new StackTrace(true);
         }
 
         private static void Message(LogMessageType type, string tag, string message)

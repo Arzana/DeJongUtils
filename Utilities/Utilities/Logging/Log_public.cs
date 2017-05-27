@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using Threading;
 
     /// <summary>
@@ -32,10 +33,10 @@
         /// Logs a message with debug priority.
         /// </summary>
         /// <param name="message"> The specified message to be logged. </param>
+        /// <param name="tag"> The tag of the called (default: caller member name). </param>
         [Conditional("DEBUG")]
-        public static void Debug(string message)
+        public static void Debug(string message, [CallerMemberName] string tag = "")
         {
-            string tag = trace.GetFrame(1).GetFileName();
             Message(LogMessageType.Debug, tag, message);
         }
         /// <summary>

@@ -16,7 +16,7 @@
     [DebuggerStepThrough]
 #endif
     [DebuggerDisplay("{GetDebuggerString()}")]
-    public class ThreadSafeQueue<T> : ArrayEnumerable<T>, ICollection, IFullyDisposable
+    public class ThreadSafeQueue<T> : LockableObject, ICollection
     {
         /// <summary>
         /// The current capacity of the queue.
@@ -25,9 +25,9 @@
         {
             get
             {
-                locker.EnterReadLock();
+                EnterReadLock();
                 int result = data.Length;
-                locker.ExitReadLock();
+                ExitReadLock();
                 return result;
             }
         }
@@ -37,9 +37,9 @@
         {
             get
             {
-                locker.EnterReadLock();
+                EnterReadLock();
                 int result = size;
-                locker.ExitReadLock();
+                ExitReadLock();
                 return result;
             }
         }
@@ -48,13 +48,8 @@
         public object SyncRoot { get { return null; } }
         /// <inheritdoc/>
         public bool IsSynchronized { get { return true; } }
-        /// <inheritdoc/>
-        public bool Disposed { get; private set; }
-        /// <inheritdoc/>
-        public bool Disposing { get; private set; }
 
         private const int SIZE_ADDER = 8;
-        private readonly ReaderWriterLockSlim locker;
         private T[] data;
         private int size, head;
 
@@ -71,7 +66,6 @@
         /// <param name="initialCapacity"></param>
         public ThreadSafeQueue(int initialCapacity)
         {
-            locker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
             data = new T[initialCapacity];
         }
         /// <summary>
@@ -80,27 +74,6 @@
         ~ThreadSafeQueue()
         {
             Dispose(false);
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Disposes the managed and unmanaged data of the <see cref="ThreadSafeQueue{T}"/>.
-        /// </summary>
-        /// <param name="disposing"> Whether to dispose unmanaged types. </param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!(Disposed || Disposing))
-            {
-                Disposing = true;
-                locker.Dispose();
-                Disposing = false;
-                Disposed = true;
-            }
         }
 
         /// <summary>
@@ -220,9 +193,14 @@
         }
 
         /// <inheritdoc/>
-        public override ArrayEnumerator<T> GetEnumerator()
+        public ArrayEnumerator<T> GetEnumerator()
         {
             return new ArrayEnumerator<T>(ToArray());
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
         private void Clear_internal()
@@ -361,7 +339,7 @@
 
         private TResult RunInSafeReadMode<TResult, TArg>(Func<TArg, TResult> func, TArg arg, string errorMsg)
         {
-            locker.EnterReadLock();
+            EnterReadLock();
 
             try
             {
@@ -374,13 +352,13 @@
             }
             finally
             {
-                locker.ExitReadLock();
+                ExitReadLock();
             }
         }
 
         private TResult RunInSafeReadMode<TResult>(Func<TResult> func, string errorMsg)
         {
-            locker.EnterReadLock();
+            EnterReadLock();
 
             try
             {
@@ -393,13 +371,13 @@
             }
             finally
             {
-                locker.ExitReadLock();
+                ExitReadLock();
             }
         }
 
         private TResult RunInSafeWriteMode<TResult, TArg>(Func<TArg, TResult> func, TArg arg, string errorMsg)
         {
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             try
             {
@@ -412,13 +390,13 @@
             }
             finally
             {
-                locker.ExitWriteLock();
+                ExitWriteLock();
             }
         }
 
         private TResult RunInSafeWriteMode<TResult>(Func<TResult> func, string errorMsg)
         {
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             try
             {
@@ -431,13 +409,13 @@
             }
             finally
             {
-                locker.ExitWriteLock();
+                ExitWriteLock();
             }
         }
 
         private void RunInSafeWriteMode<TArg>(Action<TArg> func, TArg arg, string errorMsg)
         {
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             try
             {
@@ -449,13 +427,13 @@
             }
             finally
             {
-                locker.ExitWriteLock();
+                ExitWriteLock();
             }
         }
 
         private TResult RunInSafeWriteMode<TResult, TArg>(OutFunc<TResult, TArg> func, out TArg arg, string errorMsg)
         {
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             try
             {
@@ -469,13 +447,13 @@
             }
             finally
             {
-                locker.ExitWriteLock();
+                ExitWriteLock();
             }
         }
 
         private void RunInSafeWriteMode(Action func, string errorMsg)
         {
-            locker.EnterWriteLock();
+            EnterWriteLock();
 
             try
             {
@@ -487,7 +465,7 @@
             }
             finally
             {
-                locker.ExitWriteLock();
+                ExitWriteLock();
             }
         }
 
