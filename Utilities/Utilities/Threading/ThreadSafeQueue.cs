@@ -71,7 +71,7 @@
         /// <param name="initialCapacity"></param>
         public ThreadSafeQueue(int initialCapacity)
         {
-            locker = new ReaderWriterLockSlim();
+            locker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
             data = new T[initialCapacity];
         }
         /// <summary>

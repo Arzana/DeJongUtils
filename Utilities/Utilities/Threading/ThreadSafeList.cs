@@ -96,7 +96,7 @@
         /// <param name="initialCapacity"> The initial size of the list. </param>
         public ThreadSafeList(int initialCapacity)
         {
-            locker = new ReaderWriterLockSlim();
+            locker = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
             EnsureCapacity(initialCapacity);
         }
 

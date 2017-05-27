@@ -31,10 +31,13 @@
         /// <summary>
         /// Logs a message with debug priority.
         /// </summary>
-        /// <param name="tag"> The tag of the caller. </param>
         /// <param name="message"> The specified message to be logged. </param>
         [Conditional("DEBUG")]
-        public static void Debug(string tag, string message) => Message(LogMessageType.Debug, tag, message);
+        public static void Debug(string message)
+        {
+            string tag = trace.GetFrame(1).GetFileName();
+            Message(LogMessageType.Debug, tag, message);
+        }
         /// <summary>
         /// Logs a message with error priority.
         /// </summary>

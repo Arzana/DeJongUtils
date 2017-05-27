@@ -26,7 +26,7 @@
 
             if (handler != null)
             {
-                Log.Debug(nameof(EventInvoker), $"{sender} called invoke for {handler.Method.Name}");
+                Log.Debug($"{sender} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
                 catch (TargetInvocationException e) { InvokeException.Raise(nameof(EventInvoker), e); }
@@ -49,7 +49,7 @@
 
             if (handler != null)
             {
-                Log.Debug(nameof(EventInvoker), $"{sender} called invoke for {handler.Method.Name}");
+                Log.Debug($"{sender} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
                 catch (TargetInvocationException e) { InvokeException.Raise(nameof(EventInvoker), e); }
@@ -74,7 +74,7 @@
 
             if (handler != null)
             {
-                Log.Debug(nameof(EventInvoker), $"{sender} called invoke for {handler.Method.Name}");
+                Log.Debug($"{sender} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
                 catch (TargetInvocationException e) { InvokeException.Raise(nameof(EventInvoker), e); }
@@ -91,7 +91,7 @@
         {
             if (handler != null)
             {
-                Log.Debug(nameof(EventInvoker), $"{sender ?? "NULL"} called invoke for {handler.Method.Name}");
+                Log.Debug($"{sender ?? "NULL"} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
                 catch (TargetInvocationException e) { Log.Error(nameof(EventInvoker), e.Message); }
@@ -110,7 +110,7 @@
         {
             if (handler != null)
             {
-                Log.Debug(nameof(EventInvoker), $"{sender ?? "NULL"} called invoke for {handler.Method.Name}");
+                Log.Debug($"{sender ?? "NULL"} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
                 catch (TargetInvocationException e) { Log.Error(nameof(EventInvoker), e.Message); }
@@ -131,7 +131,7 @@
         {
             if (handler != null)
             {
-                Log.Debug(nameof(EventInvoker), $"{(sender != null ? sender.ToString() : "NULL")} called invoke for {handler.Method.Name}");
+                Log.Debug($"{(sender != null ? sender.ToString() : "NULL")} called invoke for {handler.Method.Name}");
 
                 try { handler.DynamicInvoke(new object[2] { sender, args }); }
                 catch (TargetInvocationException e) { Log.Error(nameof(EventInvoker), e.Message); }
