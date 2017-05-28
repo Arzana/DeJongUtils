@@ -15,6 +15,10 @@
         /// </summary>
         public const float PI = 3.14159265358979323846f;
         /// <summary>
+        /// Represents the inverse value of pi.
+        /// </summary>
+        public const float INV_PI = 1.0f / PI;
+        /// <summary>
         /// Represents the value of pi times two.
         /// </summary>
         public const float TAU = 6.28318530717958647692f;
