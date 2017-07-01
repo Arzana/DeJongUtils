@@ -1,7 +1,6 @@
 ﻿namespace DeJong.Utilities.Core
 {
     using Logging;
-    using Core.Collections;
     using System;
     using System.Runtime.Serialization;
 

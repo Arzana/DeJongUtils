@@ -171,7 +171,7 @@
 
         private string GetDebuggerString()
         {
-            return $"TID={thread.ManagedThreadId} {(running ? "running" : "stopped")}";
+            return $"{Name}({thread.ManagedThreadId}) {(running ? "running" : "stopped")}";
         }
     }
 }

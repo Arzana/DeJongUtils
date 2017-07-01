@@ -43,6 +43,22 @@
         }
 
         /// <summary>
+        /// Clamps a floating point value between a minimum and a maximum. 
+        /// </summary>
+        /// <param name="value"> The value to be clamped. </param>
+        /// <param name="min"> The minimum value. </param>
+        /// <param name="max"> The maximum value. </param>
+        /// <returns>
+        /// <paramref name="min"/> if the value is smaller than the specified minimum;
+        /// <paramref name="max"/> if the value is greater than the specified maximum;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        public static float Clamp(float value, float min, float max)
+        {
+            return Max(min, Min(max, value));
+        }
+
+        /// <summary>
         /// Performs linear interpolation on the specified values.
         /// </summary>
         /// <param name="amount"> A value between 0 and 1 indicating the interpolation amount. </param>
