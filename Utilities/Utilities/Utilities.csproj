@@ -50,6 +50,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binary\BitReader.cs" />
+    <Compile Include="Binary\BitWriter.cs" />
     <Compile Include="Core\Collections\ArrayEnumerable.cs" />
     <Compile Include="Core\Collections\ArrayEnumerator.cs" />
     <Compile Include="Core\Collections\ArrayExtensions_Numeric.cs" />
