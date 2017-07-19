@@ -14,6 +14,23 @@
     public static partial class Log
     {
         /// <summary>
+        /// Gets or sets a value indicating whether the logs should be processed automaticaly.
+        /// </summary>
+        /// <remarks>
+        /// Default value = false.
+        /// </remarks>
+        public static bool AutoProcess
+        {
+            get { return autoProcess; }
+            set
+            {
+                Verbose(nameof(Log), value ? "Auto processing logs enabled" : "Auto processing logs disabled");
+                autoProcess = value;
+                SetLoggingThread();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the size of the recycling buffer (zero or negative values will result in no message recycling).
         /// </summary>
         /// <remarks>
@@ -85,6 +102,7 @@
         /// <returns> The next message, if there is one; otherwise, <see cref="LogMessage.Empty"/>. </returns>
         public static LogMessage PopLog()
         {
+            if (!autoProcess) PipeTick();
             return msgbuffer.Count > 0 ? msgbuffer.Dequeue() : LogMessage.Empty;
         }
 

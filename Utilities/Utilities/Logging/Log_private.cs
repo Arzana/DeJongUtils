@@ -14,6 +14,7 @@
         private static ThreadSafeQueue<LogMessage> msgbuffer;
         private static LogTraceListener listener;
         private static int recycleBufferSize;
+        private static bool autoProcess;
 
         static Log()
         {
@@ -24,9 +25,8 @@
             msgbuffer = new ThreadSafeQueue<LogMessage>();
 
             AddDebug();
+            AutoProcess = false;
             RecycleBufferSize = 64;
-
-            logThread = StopableThread.StartNew(null, null, PipeTick, "DeJong Logging");
         }
 
         [Conditional("DEBUG")]
@@ -48,7 +48,19 @@
             }
         }
 
-        [STAThread]
+        private static void SetLoggingThread()
+        {
+            if (autoProcess)
+            {
+                if (logThread == null) logThread = StopableThread.StartNew(null, null, PipeTick, "DeJong Logging");
+                else if (!logThread.Running) logThread.Start();
+            }
+            else if (logThread != null && logThread.Running)
+            {
+                logThread.Stop();
+            }
+        }
+
         private static void PipeTick()
         {
             while (preBuffer.Count > 0)

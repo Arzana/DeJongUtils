@@ -97,14 +97,6 @@
         }
 
         /// <summary>
-        /// Terminates this instance of <see cref="ThreadSafeList{T}"/>.
-        /// </summary>
-        ~ThreadSafeList()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
         /// Gets the index of a specified item.
         /// </summary>
         /// <param name="item"> The item to search for. </param>

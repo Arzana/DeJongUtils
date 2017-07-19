@@ -3,6 +3,7 @@
     using Logging;
     using System;
     using System.Runtime.InteropServices;
+    using System.Security;
 
 #if !DEBUG
     [System.Diagnostics.DebuggerStepThrough]
@@ -39,9 +40,11 @@
         }
 
         [DllImport("Kernel32.dll")]
+        [SuppressUnmanagedCodeSecurity]
         private static extern bool SetConsoleCtrlHandler(ConsoleExitHandler handler, bool add);
 
         [DllImport("Kernell32.dll")]
+        [SuppressUnmanagedCodeSecurity]
         private static extern int GetLastError();
     }
 }

@@ -27,10 +27,17 @@
                 cooldown = value;
             }
         }
+
+        /// <summary>
+        /// Gets whether this thread has started running.
+        /// </summary>
+        public bool Running { get { return running; } }
+
         /// <inheritdoc/>
         public bool Disposed { get; private set; }
         /// <inheritdoc/>
         public bool Disposing { get; private set; }
+
         /// <summary>
         /// Gets the name of this <see cref="StopableThread"/>.
         /// </summary>
@@ -121,6 +128,7 @@
                 Log.Warning(nameof(StopableThread), "Attempted to start already running thread, call ignored.");
                 return;
             }
+            else if (thread == null || thread.ThreadState != System.Threading.ThreadState.Unstarted) thread = ThreadBuilder.CreateSTA(Run, Name);
 
             thread.Start();
         }

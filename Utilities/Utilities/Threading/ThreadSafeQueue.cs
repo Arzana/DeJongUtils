@@ -68,13 +68,6 @@
         {
             data = new T[initialCapacity];
         }
-        /// <summary>
-        /// Terminates this instance of <see cref="ThreadSafeQueue{T}"/>.
-        /// </summary>
-        ~ThreadSafeQueue()
-        {
-            Dispose(false);
-        }
 
         /// <summary>
         /// Enqueue's a specified item to the back of the queue.
