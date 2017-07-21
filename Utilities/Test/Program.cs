@@ -8,9 +8,11 @@
         public static void Main(string[] args)
         {
             ConsoleLogger cl = new ConsoleLogger();
-            Log.Debug("Test");
-            cl.Update();
-            Console.ReadKey();
+            {
+                Log.Debug("Test");
+                cl.Update();
+                Console.ReadKey();
+            }
         }
     }
 }

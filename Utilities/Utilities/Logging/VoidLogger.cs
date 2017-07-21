@@ -33,6 +33,11 @@
         private StopableThread updThread;
         private bool autoUpd;
 
+        public VoidLogger()
+        {
+            Log.AddLogger(this);
+        }
+
         /// <summary>
         /// Disposes and finalizes the <see cref="VoidLogger"/>
         /// </summary>
@@ -68,8 +73,8 @@
             if (!(Disposed || Disposing))
             {
                 Disposing = true;
+                Log.RemoveLogger();
 
-                if (disposing) Log.Dispose();
                 if (updThread != null) updThread.Dispose();
 
                 Disposing = false;

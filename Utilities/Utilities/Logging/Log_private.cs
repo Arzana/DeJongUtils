@@ -18,8 +18,6 @@
 
         static Log()
         {
-            obj = new EnsureDisposeObj();
-
             garbage = new ThreadSafeQueue<LogMessage>();
             preBuffer = new List<LogMessage>();
             msgbuffer = new ThreadSafeQueue<LogMessage>();
@@ -38,6 +36,15 @@
 
         private static void Message(LogMessageType type, string tag, string message)
         {
+            if (garbage.Disposed)
+            {
+                // If an object that logs in its finalizer disposes before the log
+                // the logs that come after that need to be removed because the garbage
+                // buffer and message buffer will have been disposed.
+                Dispose();
+                return;
+            }
+
             lock (preBuffer)
             {
                 LogMessage msg;

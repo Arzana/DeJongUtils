@@ -258,7 +258,7 @@
 
         private string GetDebuggerString()
         {
-            return $"{{Count ={Count}, Capacity={Capacity}}}";
+            return Disposed ? "Disposed" : $"{{Count ={Count}, Capacity={Capacity}}}";
         }
     }
 }

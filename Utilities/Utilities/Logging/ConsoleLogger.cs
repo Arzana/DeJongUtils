@@ -4,6 +4,7 @@
     using System;
     using Threading;
     using static NativeMethods;
+    using static System.Console;
 
     /// <summary>
     /// Defines a handler that displays logged messages to the console.
@@ -66,6 +67,8 @@
         /// <inheritdoc/>
         public bool Disposing { get; private set; }
 
+        private const int MIN_SIZE = 25, MAX_SIZE = 100;
+
         private LogOutputType type;
         private StopableThread updThread;
         private ConsoleExitHandler hndlr;
@@ -79,6 +82,7 @@
         /// <param name="suppressConsoleResize"> Whether to suppress the console buffer from getting resized. </param>
         public ConsoleLogger(LogOutputType type = LogOutputType.ThreadTime, bool suppressConsoleResize = false)
         {
+            Log.AddLogger(this);
             this.type = type;
             if (hndlr == null)
             {
@@ -86,8 +90,8 @@
             }
             if (!suppressConsoleResize)
             {
-                Console.BufferHeight = short.MaxValue - 1;
-                Console.BufferWidth = short.MaxValue - 1;
+                BufferHeight = ExtraMath.Clamp(BufferHeight << 2, MIN_SIZE, MAX_SIZE);
+                BufferWidth = ExtraMath.Clamp(BufferWidth << 2, MIN_SIZE, MAX_SIZE);
             }
         }
 
@@ -111,12 +115,12 @@
             {
                 switch (msg.Type)
                 {
-                    case LogMessageType.Verbose: Console.ForegroundColor = VerboseColor; break;
-                    case LogMessageType.Debug: Console.ForegroundColor = DebugColor; break;
-                    case LogMessageType.Info: Console.ForegroundColor = InfoColor; break;
-                    case LogMessageType.Warning: Console.ForegroundColor = WarningColor; break;
-                    case LogMessageType.Error: Console.ForegroundColor = ErrorColor; break;
-                    case LogMessageType.Fatal: Console.ForegroundColor = FatalColor; break;
+                    case LogMessageType.Verbose: ForegroundColor = VerboseColor; break;
+                    case LogMessageType.Debug: ForegroundColor = DebugColor; break;
+                    case LogMessageType.Info: ForegroundColor = InfoColor; break;
+                    case LogMessageType.Warning: ForegroundColor = WarningColor; break;
+                    case LogMessageType.Error: ForegroundColor = ErrorColor; break;
+                    case LogMessageType.Fatal: ForegroundColor = FatalColor; break;
                 }
 
                 if (DynamicPadding)
@@ -124,15 +128,15 @@
                     string header = msg.GetLogHeaderLine(type);
                     if (header.Length + 2 > hdrPad) hdrPad = header.Length + 2;
 
-                    Console.Write($"{header}: ".PadRight(hdrPad));
-                    Console.Write($"{msg.Message}{Environment.NewLine}");
+                    Write($"{header}: ".PadRight(hdrPad));
+                    Write($"{msg.Message}{Environment.NewLine}");
                 }
-                else Console.WriteLine(msg.GetLogLine(type));
+                else WriteLine(msg.GetLogLine(type));
 
                 Log.FlushLog(msg);
             }
 
-            Console.ForegroundColor = oldColor;
+            ForegroundColor = oldColor;
         }
 
         /// <inheritdoc/>
@@ -150,8 +154,8 @@
             if (!(Disposed || Disposing))
             {
                 Disposing = true;
+                Log.RemoveLogger();
 
-                if (disposing) Log.Dispose();
                 if (hndlr != null)
                 {
                     RemoveConsoleHandle(hndlr);

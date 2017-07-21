@@ -32,7 +32,7 @@
         /// </summary>
         /// <param name="tag"> The object that caused the exception. </param>
         /// <param name="message"> The specific message. </param>
-        public LoggedException(string tag, string message) 
+        public LoggedException(string tag, string message)
             : base(message)
         {
             Init(tag);
@@ -44,7 +44,7 @@
         /// <param name="message"> The specific message. </param>
         /// <param name="tag"> The object that caused the exception. </param>
         /// <param name="inner"> The exception that caused this exception. </param>
-        public LoggedException(string tag, string message, Exception inner) 
+        public LoggedException(string tag, string message, Exception inner)
             : base(message, inner)
         {
             Init(tag);
