@@ -70,6 +70,12 @@
 
         private static void PipeTick()
         {
+            if (msgbuffer.Disposed)
+            {
+                Dispose();
+                return;
+            }
+
             while (preBuffer.Count > 0)
             {
                 lock (preBuffer)

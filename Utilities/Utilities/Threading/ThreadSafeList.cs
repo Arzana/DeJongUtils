@@ -108,12 +108,12 @@
 
             for (int i = 0; i < size; i++)
             {
-                if(data[i] == null && item == null)
+                if (data[i] == null && item == null)
                 {
                     result = i;
                     break;
                 }
-                else if(data[i].Equals(item))
+                else if (data[i].Equals(item))
                 {
                     result = i;
                     break;

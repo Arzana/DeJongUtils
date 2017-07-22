@@ -76,7 +76,13 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public void Enqueue(T item)
         {
-            RunInSafeWriteMode(Enqueue_internal, item, "Unable to enqueue item");
+            EnterWriteLock();
+            if (size == data.Length) SetCapacity(data.Length + SIZE_ADDER);
+
+            data[(head + size) % data.Length] = item;
+            ++size;
+
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -86,7 +92,16 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public void Enqueue(ICollection<T> items)
         {
-            RunInSafeWriteMode(Enqueue_internal, items, "Unable to enqueue multiple items");
+            EnterWriteLock();
+            if (size + items.Count >= data.Length) SetCapacity(data.Length + items.Count + SIZE_ADDER);
+
+            foreach (T item in items)
+            {
+                data[(head + size) % data.Length] = item;
+                ++size;
+            }
+
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -96,7 +111,14 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public void SkipQueue(T item)
         {
-            RunInSafeWriteMode(SkipQueue_internal, item, "Unable to enqueue at head");
+            EnterWriteLock();
+            if (size >= data.Length) SetCapacity(data.Length + SIZE_ADDER);
+            if (--head < 0) head = data.Length - 1;
+
+            data[head] = item;
+            ++size;
+
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -107,7 +129,20 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public T Dequeue()
         {
-            return RunInSafeWriteMode(Dequeue_internal, "Unable to dequeue item");
+            EnterWriteLock();
+            if (size == 0)
+            {
+                ExitWriteLock();
+                throw new InvalidOperationException("The queue is empty");
+            }
+
+            T result = data[head];
+            data[head] = default(T);
+            head = (head + 1) % data.Length;
+            --size;
+
+            ExitWriteLock();
+            return result;
         }
 
         /// <summary>
@@ -118,7 +153,22 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public bool TryDequeue(out T item)
         {
-            return RunInSafeWriteMode(TryDequeue_internal, out item, "Unable to dequeue item");
+            EnterWriteLock();
+            if (size == 0)
+            {
+                ExitWriteLock();
+                item = default(T);
+                return false;
+            }
+
+            item = data[head];
+            data[head] = default(T);
+
+            head = (head + 1) % data.Length;
+            --size;
+
+            ExitWriteLock();
+            return true;
         }
 
         /// <summary>
@@ -127,9 +177,21 @@
         /// <param name="desination"> The destination of the queue data. </param>
         /// <returns> The amount of items drained in the destination. </returns>
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
-        public int TryDrain(IList<T> desination)
+        public int Drain(IList<T> desination)
         {
-            return RunInSafeWriteMode(TryDrain_internal, desination, "Unable to drain queue");
+            EnterWriteLock();
+            int added = size;
+
+            while (size > 0)
+            {
+                desination.Add(data[head]);
+                data[head] = default(T);
+                head = (head + 1) % data.Length;
+                --size;
+            }
+
+            ExitWriteLock();
+            return added;
         }
 
         /// <summary>
@@ -141,7 +203,22 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public T Peek(int index)
         {
-            return RunInSafeWriteMode(Peek_internal, index, "Unable to peek queue");
+            EnterWriteLock();
+
+            if (size == 0)
+            {
+                ExitWriteLock();
+                return default(T);
+            }
+            if (index >= size)
+            {
+                ExitWriteLock();
+                LoggedException.Raise(nameof(ThreadSafeQueue<T>), "index must be smaller than the size of the queue", new IndexOutOfRangeException());
+            }
+
+            T result = data[(head + index) % data.Length];
+            ExitWriteLock();
+            return result;
         }
 
         /// <summary>
@@ -152,7 +229,18 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public bool Contains(T item)
         {
-            return RunInSafeReadMode(Contains_internal, item, "Unable to check for item");
+            EnterReadLock();
+            for (int i = 0, ptr = head; i < size; i++, ptr = (ptr + 1) % data.Length)
+            {
+                if ((data[ptr] == null && item == null) || data[ptr].Equals(item))
+                {
+                    ExitReadLock();
+                    return true;
+                }
+            }
+
+            ExitReadLock();
+            return false;
         }
 
         /// <summary>
@@ -162,7 +250,17 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public T[] ToArray()
         {
-            return RunInSafeReadMode(ToArray_internal, "Unable to convert queue to array");
+            EnterReadLock();
+            T[] result = new T[size];
+
+            for (int i = 0, ptr = head; i < size; i++)
+            {
+                result[i] = data[ptr++];
+                if (ptr >= data.Length) ptr = 0;
+            }
+
+            ExitReadLock();
+            return result;
         }
 
         /// <summary>
@@ -171,7 +269,17 @@
         /// <exception cref="LoggedException"> An unhandled exception occured whilst excecuting the method. </exception>
         public void Clear()
         {
-            RunInSafeWriteMode(Clear_internal, "Unable to clear queue");
+            EnterWriteLock();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = default(T);
+            }
+
+            head = 0;
+            size = 0;
+
+            ExitWriteLock();
         }
 
         /// <summary>
@@ -193,118 +301,7 @@
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
-        }
-
-        private void Clear_internal()
-        {
-            for (int i = 0; i < data.Length; i++)
-            {
-                data[i] = default(T);
-            }
-
-            head = 0;
-            size = 0;
-        }
-
-        private T[] ToArray_internal()
-        {
-            T[] result = new T[size];
-
-            for (int i = 0, ptr = head; i < size; i++)
-            {
-                result[i] = data[ptr++];
-                if (ptr >= data.Length) ptr = 0;
-            }
-
-            return result;
-        }
-
-        private bool Contains_internal(T item)
-        {
-            for (int i = 0, ptr = head; i < size; i++, ptr = (ptr + 1) % data.Length)
-            {
-                if (data[ptr] == null && item == null) return true;
-                else if (data[ptr].Equals(item)) return true;
-            }
-
-            return false;
-        }
-
-        private T Peek_internal(int index)
-        {
-            if (size == 0) return default(T);
-            LoggedException.RaiseIf(index >= size, nameof(ThreadSafeQueue<T>), "index must be smaller than the size of the queue", new IndexOutOfRangeException());
-            return data[(head + index) % data.Length];
-        }
-
-        private int TryDrain_internal(IList<T> desination)
-        {
-            int added = size;
-
-            while (size > 0)
-            {
-                desination.Add(data[head]);
-                data[head] = default(T);
-                head = (head + 1) % data.Length;
-                --size;
-            }
-
-            return added;
-        }
-
-        private bool TryDequeue_internal(out T item)
-        {
-            if (size == 0)
-            {
-                item = default(T);
-                return false;
-            }
-
-            item = data[head];
-            data[head] = default(T);
-
-            head = (head + 1) % data.Length;
-            --size;
-
-            return true;
-        }
-
-        private T Dequeue_internal()
-        {
-            if (size == 0) throw new InvalidOperationException("The queue is empty");
-
-            T result = data[head];
-            data[head] = default(T);
-            head = (head + 1) % data.Length;
-            --size;
-
-            return result;
-        }
-
-        private void SkipQueue_internal(T item)
-        {
-            if (size >= data.Length) SetCapacity(data.Length + SIZE_ADDER);
-            if (--head < 0) head = data.Length - 1;
-            data[head] = item;
-            ++size;
-        }
-
-        private void Enqueue_internal(ICollection<T> items)
-        {
-            if (size + items.Count >= data.Length) SetCapacity(data.Length + items.Count + SIZE_ADDER);
-            foreach (T item in items)
-            {
-                data[(head + size) % data.Length] = item;
-                ++size;
-            }
-        }
-
-        private void Enqueue_internal(T item)
-        {
-            if (size == data.Length) SetCapacity(data.Length + SIZE_ADDER);
-            data[(head + size) % data.Length] = item;
-            ++size;
+            return GetEnumerator();
         }
 
         private void SetCapacity(int newCapacity)
@@ -327,138 +324,6 @@
 
                 data = newData;
                 head = 0;
-            }
-        }
-
-        private TResult RunInSafeReadMode<TResult, TArg>(Func<TArg, TResult> func, TArg arg, string errorMsg)
-        {
-            EnterReadLock();
-
-            try
-            {
-                return func.Invoke(arg);
-            }
-            catch (Exception e)
-            {
-                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
-                return default(TResult);
-            }
-            finally
-            {
-                ExitReadLock();
-            }
-        }
-
-        private TResult RunInSafeReadMode<TResult>(Func<TResult> func, string errorMsg)
-        {
-            EnterReadLock();
-
-            try
-            {
-                return func.Invoke();
-            }
-            catch (Exception e)
-            {
-                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
-                return default(TResult);
-            }
-            finally
-            {
-                ExitReadLock();
-            }
-        }
-
-        private TResult RunInSafeWriteMode<TResult, TArg>(Func<TArg, TResult> func, TArg arg, string errorMsg)
-        {
-            EnterWriteLock();
-
-            try
-            {
-                return func.Invoke(arg);
-            }
-            catch (Exception e)
-            {
-                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
-                return default(TResult);
-            }
-            finally
-            {
-                ExitWriteLock();
-            }
-        }
-
-        private TResult RunInSafeWriteMode<TResult>(Func<TResult> func, string errorMsg)
-        {
-            EnterWriteLock();
-
-            try
-            {
-                return func.Invoke();
-            }
-            catch (Exception e)
-            {
-                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
-                return default(TResult);
-            }
-            finally
-            {
-                ExitWriteLock();
-            }
-        }
-
-        private void RunInSafeWriteMode<TArg>(Action<TArg> func, TArg arg, string errorMsg)
-        {
-            EnterWriteLock();
-
-            try
-            {
-                func.Invoke(arg);
-            }
-            catch (Exception e)
-            {
-                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
-            }
-            finally
-            {
-                ExitWriteLock();
-            }
-        }
-
-        private TResult RunInSafeWriteMode<TResult, TArg>(OutFunc<TResult, TArg> func, out TArg arg, string errorMsg)
-        {
-            EnterWriteLock();
-
-            try
-            {
-                return func.Invoke(out arg);
-            }
-            catch (Exception e)
-            {
-                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
-                arg = default(TArg);
-                return default(TResult);
-            }
-            finally
-            {
-                ExitWriteLock();
-            }
-        }
-
-        private void RunInSafeWriteMode(Action func, string errorMsg)
-        {
-            EnterWriteLock();
-
-            try
-            {
-                func.Invoke();
-            }
-            catch (Exception e)
-            {
-                LoggedException.Raise(nameof(ThreadSafeQueue<T>), errorMsg, e);
-            }
-            finally
-            {
-                ExitWriteLock();
             }
         }
 
